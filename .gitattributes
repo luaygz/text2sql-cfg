@@ -1,0 +1,2 @@
+# The spend ledger is append-only: concurrent branches merge by keeping every line.
+runs/spend_ledger.jsonl merge=union

@@ -1,0 +1,216 @@
+【DB_ID】 saas_crm
+【Schema】
+# Table: currencies, Currencies used for prices, deals, invoices and payments.
+[
+(currency_code:TEXT, Primary Key, ISO 4217 code, e.g. 'USD'., Examples: ['AUD', 'CAD', 'CHF']),
+(name:TEXT, Currency name., Examples: ['Australian Dollar', 'Canadian Dollar', 'Euro']),
+(symbol:TEXT, Display symbol, e.g. '$'., Examples: ['$', 'A$', 'CA$']),
+(usd_rate:REAL, US dollars per one unit of this currency., Notes: Fixed reporting rate. Multiply a major-unit amount by it to convert to USD., Examples: [0.095, 0.66, 0.73])
+]
+# Table: countries, Countries that accounts and organisations are based in.
+[
+(country_code:TEXT, Primary Key, ISO 3166-1 alpha-2 code, e.g. 'DE'., Examples: ['AT', 'AU', 'BE']),
+(name:TEXT, Country name., Examples: ['Australia', 'Austria', 'Belgium']),
+(region:TEXT, Sales region., Notes: One of 'North America', 'Europe', 'Asia Pacific'., Examples: ['Europe', 'Asia Pacific', 'North America']),
+(currency_code:TEXT, Foreign Key, Local currency., Examples: ['EUR', 'AUD', 'CAD'])
+]
+# Table: industries, Industry classification for accounts.
+[
+(industry_id:INTEGER, Primary Key, Industry identifier., Examples: [1, 2, 3]),
+(name:TEXT, Industry name, e.g. 'Logistics'., Examples: ['Biotechnology', 'Education', 'Energy']),
+(sector:TEXT, Broader sector grouping several industries., Notes: One of 'Technology', 'Finance', 'Health', 'Industrial', 'Consumer', 'Public Sector', 'Professional Services'., Examples: ['Consumer', 'Industrial', 'Finance'])
+]
+# Table: plans, Standard subscription plans: the shared price list.
+[
+(plan_id:INTEGER, Primary Key, Plan identifier., Examples: [1, 2, 3]),
+(name:TEXT, Plan name, e.g. 'Growth (annual)'., Examples: ['Business (annual)', 'Business (monthly)', 'Enterprise (annual)']),
+(tier:TEXT, Plan tier., Notes: One of 'starter', 'growth', 'business', 'enterprise', 'legacy'., Examples: ['business', 'growth', 'starter']),
+(billing_period:TEXT, How often the plan is invoiced., Notes: 'monthly' or 'annual'., Examples: ['annual', 'monthly']),
+(price_per_seat:REAL, List price in USD per seat per billing period., Notes: A monthly plan bills this every month, an annual plan once a year., Examples: [15.0, 25.0, 35.0]),
+(max_seats:INTEGER, Most seats a subscription on this plan may have., Notes: NULL means unlimited., Examples: [10, 50, 250]),
+(is_active:INTEGER, Whether the plan can still be sold., Notes: 1 = on sale; 0 = retired, but existing subscriptions may still use it., Examples: [1, 0])
+]
+# Table: tenants, The caller's own organisation (the company using this CRM). Queries only ever see one row: the caller's.
+[
+(name:TEXT, Organisation name.),
+(country_code:TEXT, Foreign Key, Headquarters country., Notes: Customers in the same country are charged domestic sales tax.),
+(default_currency_code:TEXT, Foreign Key, Currency most accounts are billed in.),
+(signed_up_at:TEXT, When the organisation started using the product., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC).)
+]
+# Table: teams, Groups of users: sales regions, support, customer success.
+[
+(team_id:INTEGER, Primary Key, Team identifier.),
+(name:TEXT, Team name, e.g. 'Sales East'.),
+(department:TEXT, Department the team belongs to., Notes: One of 'sales', 'support', 'success'.)
+]
+# Table: users, People at the organisation who use the CRM: administrators, managers, sales reps, support agents and customer success managers.
+[
+(user_id:INTEGER, Primary Key, User identifier.),
+(team_id:INTEGER, Foreign Key, Team the user belongs to., Notes: NULL for administrators outside any team.),
+(manager_user_id:INTEGER, Foreign Key, The user's manager (users.user_id)., Notes: NULL for the top administrator.),
+(full_name:TEXT, First and last name.),
+(email:TEXT, Work email address.),
+(role:TEXT, Job role in the CRM., Notes: One of 'admin', 'manager', 'sales_rep', 'support_agent', 'csm' (customer success manager).),
+(is_active:INTEGER, Whether the person still works there., Notes: 1 = active; 0 = left the company. Records they owned keep pointing at them.),
+(created_at:TEXT, When the user was added., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC).),
+(last_login_at:TEXT, Most recent login., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC); NULL if the user never logged in.)
+]
+# Table: accounts, Companies the organisation sells to: prospects, customers, former customers and partners.
+[
+(account_id:INTEGER, Primary Key, Account identifier.),
+(owner_user_id:INTEGER, Foreign Key, Account manager responsible for the account (users.user_id).),
+(parent_account_id:INTEGER, Foreign Key, Parent company of a subsidiary account., Notes: NULL for independent accounts.),
+(name:TEXT, Company name as typed by users., Notes: Casing is inconsistent ('Acme Logistics' vs 'ACME LOGISTICS'); compare with LOWER().),
+(industry_id:INTEGER, Foreign Key, Industry of the company., Notes: NULL if unknown.),
+(country_code:TEXT, Foreign Key, Country the company is based in., Notes: NULL if unknown.),
+(currency_code:TEXT, Foreign Key, Currency the account is quoted and billed in.),
+(lifecycle_stage:TEXT, Relationship stage., Notes: Values prospect, customer, churned (former customer), partner. Casing is inconsistent ('Customer', 'customer', 'CUSTOMER'); compare with LOWER().),
+(employee_count:INTEGER, Approximate head count of the company., Notes: NULL if unknown.),
+(website:TEXT, Company website domain., Notes: NULL if unknown.),
+(payment_terms_days:INTEGER, Days between an invoice's issue date and its due date., Notes: 15, 30 or 45.),
+(created_at:TEXT, When the account was added to the CRM., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC).)
+]
+# Table: contacts, People at accounts.
+[
+(contact_id:INTEGER, Primary Key, Contact identifier.),
+(owner_user_id:INTEGER, Foreign Key, User responsible for the contact (users.user_id).),
+(account_id:INTEGER, Foreign Key, Company the contact works for.),
+(first_name:TEXT, First name.),
+(last_name:TEXT, Last name.),
+(email:TEXT, Email address., Notes: Casing is inconsistent; compare with LOWER(). NULL if unknown.),
+(phone:TEXT, Phone number in free format., Notes: NULL if unknown.),
+(job_title:TEXT, Job title as typed by users., Notes: Free text with inconsistent casing and stray spaces; compare with LOWER(TRIM(job_title)). NULL if unknown.),
+(is_primary:INTEGER, Whether this is the main contact of the account., Notes: 1 for exactly one contact per account, else 0.),
+(created_at:TEXT, When the contact was added., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC).)
+]
+# Table: deals, Sales opportunities. Every won deal (stage 'closed_won') started the subscription that references it.
+[
+(deal_id:INTEGER, Primary Key, Deal identifier.),
+(owner_user_id:INTEGER, Foreign Key, Sales rep who owns the deal (users.user_id).),
+(account_id:INTEGER, Foreign Key, Account the deal is with.),
+(name:TEXT, Deal name.),
+(stage:TEXT, Pipeline stage., Notes: Open: 'prospecting', 'qualification', 'proposal', 'negotiation'. Closed: 'closed_won', 'closed_lost'.),
+(amount:REAL, Expected first-year contract value., Notes: In the deal currency, major units (dollars, not cents).),
+(currency_code:TEXT, Foreign Key, Currency of amount.),
+(probability:INTEGER, Rep's win probability in percent (0-100)., Notes: NULL if the rep did not set it.),
+(lead_source:TEXT, Where the deal came from., Notes: One of 'inbound', 'outbound', 'referral', 'partner', 'event'; NULL if unknown.),
+(expected_close_date:TEXT, Date the rep forecasts the deal to close., Notes: Text 'YYYY-MM-DD'. Set for every deal; for closed deals it is the last forecast, not the actual close date (see closed_at).),
+(created_at:TEXT, When the deal was opened., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC).),
+(closed_at:TEXT, When the deal was actually won or lost., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC); NULL while the deal is open.)
+]
+# Table: subscriptions, Recurring plan subscriptions of accounts.
+[
+(subscription_id:INTEGER, Primary Key, Subscription identifier.),
+(owner_user_id:INTEGER, Foreign Key, Account manager of the subscribing account (same as accounts.owner_user_id).),
+(account_id:INTEGER, Foreign Key, Subscribing account.),
+(plan_id:INTEGER, Foreign Key, Plan subscribed to.),
+(deal_id:INTEGER, Foreign Key, Won deal that created the subscription., Notes: NULL for self-serve sign-ups.),
+(status:TEXT, Subscription state., Notes: One of 'trialing', 'active', 'past_due' (latest invoice overdue), 'canceled'.),
+(seats:INTEGER, Number of licensed seats.),
+(discount_pct:REAL, Discount off the list price, in percent (0-30).),
+(currency_code:TEXT, Foreign Key, Currency the subscription is billed in.),
+(started_at:TEXT, First day of the subscription., Notes: Text 'YYYY-MM-DD'.),
+(canceled_at:TEXT, Day the subscription ended., Notes: Text 'YYYY-MM-DD'; NULL unless status is 'canceled'.)
+]
+# Table: invoices, Invoices sent to accounts, for subscriptions or one-off services.
+[
+(invoice_id:INTEGER, Primary Key, Invoice identifier.),
+(owner_user_id:INTEGER, Foreign Key, Account manager of the invoiced account (same as accounts.owner_user_id).),
+(account_id:INTEGER, Foreign Key, Invoiced account.),
+(subscription_id:INTEGER, Foreign Key, Subscription being billed., Notes: NULL for one-off services invoices.),
+(invoice_number:TEXT, Invoice number shown to the customer., Notes: Format 'INV-YYYY-NNNNN'; numbering restarts every year.),
+(status:TEXT, Payment state., Notes: One of 'open' (unpaid; overdue once the due date has passed), 'paid', 'void' (cancelled, never payable), 'uncollectible' (written off).),
+(currency_code:TEXT, Foreign Key, Invoice currency.),
+(issued_at:TEXT, Issue date (start of the billed period)., Notes: Text 'YYYY-MM-DD'.),
+(due_date:TEXT, Date payment is due., Notes: Text in two formats: 'YYYY-MM-DD' for invoices issued from 2024-07-01, 'MM/DD/YYYY' for older invoices imported from the legacy billing system. Normalise before comparing or sorting, e.g. CASE WHEN INSTR(due_date, '/') > 0 THEN SUBSTR(due_date, 7, 4) || '-' || SUBSTR(due_date, 1, 2) || '-' || SUBSTR(due_date, 4, 2) ELSE due_date END.),
+(subtotal:REAL, Sum of the line items before tax., Notes: Invoice currency, major units.),
+(tax:REAL, Sales tax., Notes: Invoice currency, major units; 0 for customers outside the organisation's country.),
+(total_amount:REAL, Amount payable: subtotal plus tax., Notes: Invoice currency, major units (1234.50 means 1,234.50 dollars or euros).)
+]
+# Table: invoice_line_items, Lines of an invoice.
+[
+(line_item_id:INTEGER, Primary Key, Line item identifier.),
+(owner_user_id:INTEGER, Foreign Key, Account manager of the invoiced account (same as invoices.owner_user_id).),
+(invoice_id:INTEGER, Foreign Key, Invoice the line belongs to.),
+(description:TEXT, Line text, e.g. the plan, period and seat count.),
+(quantity:INTEGER, Units billed (seats for subscription lines).),
+(unit_price:REAL, Price per unit., Notes: Invoice currency, major units; negative on discount lines.),
+(line_total:REAL, quantity * unit_price., Notes: Invoice currency, major units.)
+]
+# Table: payments, Payment attempts against invoices, as reported by the payment processor.
+[
+(payment_id:INTEGER, Primary Key, Payment identifier.),
+(owner_user_id:INTEGER, Foreign Key, Account manager of the paying account (same as invoices.owner_user_id).),
+(invoice_id:INTEGER, Foreign Key, Invoice being paid.),
+(amount:INTEGER, Amount of the payment attempt in CENTS., Notes: Minor currency units as sent by the payment processor, unlike every other money column: 123450 means 1,234.50. Divide by 100.0 before comparing with invoices.total_amount or reporting money.),
+(currency_code:TEXT, Foreign Key, Payment currency (same as the invoice).),
+(method:TEXT, Payment method., Notes: One of 'card', 'ach', 'sepa_debit', 'bacs', 'wire', 'check'.),
+(status:TEXT, Outcome of the attempt., Notes: 'succeeded' (money received), 'failed', 'pending' (not settled yet). Only succeeded payments count as collected.),
+(paid_at:TEXT, When the payment was attempted., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC).),
+(processor_ref:TEXT, Reference id at the payment processor.)
+]
+# Table: tickets, Customer support tickets.
+[
+(ticket_id:INTEGER, Primary Key, Ticket identifier.),
+(owner_user_id:INTEGER, Foreign Key, Support agent assigned to the ticket (users.user_id).),
+(account_id:INTEGER, Foreign Key, Account that raised the ticket.),
+(contact_id:INTEGER, Foreign Key, Contact who raised the ticket., Notes: NULL if not recorded.),
+(subject:TEXT, Subject line written by the customer.),
+(description:TEXT, First message of the ticket., Notes: NULL if empty.),
+(priority:TEXT, Urgency., Notes: Values low, normal, high, urgent. Casing is inconsistent ('high', 'High', 'HIGH'); compare with LOWER().),
+(status:TEXT, Ticket state., Notes: One of 'open', 'pending' (waiting on the customer), 'solved', 'closed'.),
+(channel:TEXT, How the ticket arrived., Notes: One of 'email', 'web', 'chat', 'phone', 'api'.),
+(opened_at:TEXT, When the ticket was opened., Notes: Text in two formats: 'YYYY-MM-DDTHH:MM:SSZ' for channel 'web' and 'api', 'YYYY-MM-DD HH:MM:SS' otherwise (both UTC). Wrap in DATETIME() before comparing; the date functions accept both.),
+(resolved_at:TEXT, When the ticket was solved., Notes: Same format as opened_at; NULL while open or pending.),
+(satisfaction_score:INTEGER, Customer rating after resolution, 1-5., Notes: NULL if the customer did not answer the survey.)
+]
+# Table: activities, Logged sales and success activities: calls, emails, meetings, demos and notes.
+[
+(activity_id:INTEGER, Primary Key, Activity identifier.),
+(owner_user_id:INTEGER, Foreign Key, User who logged the activity (users.user_id).),
+(account_id:INTEGER, Foreign Key, Account the activity concerns.),
+(contact_id:INTEGER, Foreign Key, Contact involved., Notes: NULL for internal notes.),
+(deal_id:INTEGER, Foreign Key, Deal the activity was logged against., Notes: NULL if not tied to a deal.),
+(activity_type:TEXT, Kind of activity., Notes: One of 'call', 'email', 'meeting', 'demo', 'note'.),
+(subject:TEXT, Short summary.),
+(occurred_at:TEXT, When the activity happened., Notes: Text 'YYYY-MM-DD HH:MM:SS' (UTC).),
+(duration_minutes:INTEGER, Length of the call, meeting or demo., Notes: NULL for emails and notes.),
+(notes:TEXT, Free-text notes., Notes: NULL if none.)
+]
+【Foreign keys】
+countries.currency_code=currencies.currency_code
+tenants.default_currency_code=currencies.currency_code
+tenants.country_code=countries.country_code
+users.manager_user_id=users.user_id
+users.team_id=teams.team_id
+accounts.currency_code=currencies.currency_code
+accounts.country_code=countries.country_code
+accounts.industry_id=industries.industry_id
+accounts.parent_account_id=accounts.account_id
+accounts.owner_user_id=users.user_id
+contacts.account_id=accounts.account_id
+contacts.owner_user_id=users.user_id
+deals.currency_code=currencies.currency_code
+deals.account_id=accounts.account_id
+deals.owner_user_id=users.user_id
+subscriptions.currency_code=currencies.currency_code
+subscriptions.deal_id=deals.deal_id
+subscriptions.plan_id=plans.plan_id
+subscriptions.account_id=accounts.account_id
+subscriptions.owner_user_id=users.user_id
+invoices.currency_code=currencies.currency_code
+invoices.subscription_id=subscriptions.subscription_id
+invoices.account_id=accounts.account_id
+invoices.owner_user_id=users.user_id
+invoice_line_items.invoice_id=invoices.invoice_id
+invoice_line_items.owner_user_id=users.user_id
+payments.currency_code=currencies.currency_code
+payments.invoice_id=invoices.invoice_id
+payments.owner_user_id=users.user_id
+tickets.contact_id=contacts.contact_id
+tickets.account_id=accounts.account_id
+tickets.owner_user_id=users.user_id
+activities.deal_id=deals.deal_id
+activities.contact_id=contacts.contact_id
+activities.account_id=accounts.account_id
+activities.owner_user_id=users.user_id

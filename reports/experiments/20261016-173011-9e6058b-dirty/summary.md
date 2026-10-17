@@ -1,0 +1,75 @@
+# Run 20261016T173011-33842e
+
+| Field | Value |
+|---|---|
+| Config | `best` (overrides: n_candidates=5, question_analysis on, schema_linking on, strategies=divide_conquer,query_plan,direct_linked_fewshot,direct_full,small_linked) |
+| Dataset | bird_minidev / dev, evidence on |
+| Git SHA | `9e6058ba110908fba8be69f59edf24a618ad2e41-dirty` |
+| Started | 2026-10-16 17:30:11 UTC |
+| Status | complete: 350 questions |
+| Candidates / effort | 5 / medium |
+| Spend | $0.0000 billed, $3.19 at list price, budget $6.00; 6270 calls, 6270 cache hits |
+
+## Metrics
+
+Intervals are 95% percentile bootstrap over questions; Wilson intervals in brackets.
+
+| Metric | Value |
+|---|---|
+| EX | 73.1% (68.6-77.7) [68.3%-77.5%], 256/350 |
+| Oracle pass@5 | 74.9% (70.3-79.1) |
+| Selection accuracy (EX / pass@N) | 97.7% |
+| Cost / question | $0.0091 (total $3.18) |
+| Latency p50 / p95 | 14.4 s / 64.9 s |
+| Grammar rejection rate | 1.0% (19 of 1814 calls) |
+| Grammar coverage of gold SQL | 98.9% (97.7-99.7), 346/350 |
+| Linking recall (all gold columns linked) | 91.4% (88.3-94.3); mean column recall 97.8% over 350 questions |
+| Gold-suspect failures | 60 of 94 |
+
+## By difficulty
+
+| Difficulty | n | EX (95% CI) | pass@N | Cost / q |
+|---|---|---|---|---|
+| simple | 104 | 82.7% (75.0-89.4) | 84.6% | $0.0073 |
+| moderate | 175 | 71.4% (64.6-78.3) | 73.7% | $0.0093 |
+| challenging | 71 | 63.4% (52.1-74.6) | 63.4% | $0.0112 |
+
+## By database
+
+| Database | n | EX (95% CI) | pass@N | Cost / q |
+|---|---|---|---|---|
+| california_schools | 21 | 57.1% (38.1-76.2) | 61.9% | $0.0103 |
+| card_games | 37 | 64.9% (48.6-78.4) | 67.6% | $0.0080 |
+| codebase_community | 34 | 76.5% (61.8-91.2) | 76.5% | $0.0088 |
+| debit_card_specializing | 21 | 57.1% (38.1-76.2) | 57.1% | $0.0096 |
+| european_football_2 | 36 | 80.6% (66.7-91.7) | 86.1% | $0.0092 |
+| financial | 22 | 63.6% (45.3-81.8) | 63.6% | $0.0088 |
+| formula_1 | 46 | 76.1% (63.0-87.0) | 80.4% | $0.0083 |
+| student_club | 34 | 85.3% (73.5-97.1) | 85.3% | $0.0072 |
+| superhero | 36 | 91.7% (80.6-100.0) | 91.7% | $0.0082 |
+| thrombosis_prediction | 35 | 57.1% (40.0-74.3) | 57.1% | $0.0094 |
+| toxicology | 28 | 78.6% (64.3-92.9) | 78.6% | $0.0140 |
+
+## Safety
+
+Adversarial questions: 0. Questions where an unsafe effect reached the database: 0.
+
+| Layer | Queries stopped | Questions affected |
+|---|---|---|
+| grammar | 0 | 0 |
+| validator | 9 | 7 |
+| executor | 0 | 0 |
+| scoping | 0 | 0 |
+
+## Failure taxonomy
+
+| Label | Failures |
+|---|---|
+| date_handling | 1 |
+| extra_or_missing_output_columns | 11 |
+| gold_label_suspect | 47 |
+| other | 3 |
+| wrong_aggregation_or_grouping | 13 |
+| wrong_filter_value | 7 |
+| wrong_join_path | 1 |
+| wrong_table_or_column | 11 |

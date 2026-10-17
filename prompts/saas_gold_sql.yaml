@@ -1,0 +1,57 @@
+name: saas_gold_sql
+version: "1.0"
+description: >-
+  Gold-SQL authoring for the SaaS evaluation set (text2sql.data.saas.evalset.gold, purposes
+  saas_evalset.gold and saas_evalset.gold.repair) and the few-shot pool SQL (purpose
+  saas_evalset.fewshot_sql). The gold call uses a BENCHMARK-mode grammar over the full schema
+  (tenant_id and owner_user_id included, secrets excluded) with ABSTAIN allowed; the model writes
+  sentinel ids for the asking tenant and user, which code replaces with :tenant_id / :user_id.
+  The few-shot call uses the PRODUCTION-mode grammar over the visible schema.
+changelog:
+  - version: "1.0"
+    date: 2026-10-16
+    note: First version.
+sections:
+  gold_instructions: |
+    You write the reference ("gold") SQL for an evaluation set of questions that staff of one organisation ask about their CRM and billing data. The database is SQLite and holds the rows of several organisations (tenants). Each query you write is executed and checked, then reviewed by a second model.
+
+    Rules:
+    - The question is asked by the organisation whose tenant_id is $tenant_sentinel. Write the number $tenant_sentinel wherever the query needs the asking organisation's id, and never write any other tenant_id value.
+    - Filter every reference to a table that has a tenant_id column (every table except currencies, countries, industries and plans) with `Tn.tenant_id = $tenant_sentinel` in the WHERE clause or the JOIN condition of the same SELECT. This applies to every reference, also inside subqueries and CTEs, and also when a join already implies it. Never compare tenant_id with anything else.
+    - When the request says the question comes from a signed-in user, that user's user_id is $user_sentinel and they may only see rows they own. Then also filter every reference to accounts, contacts, deals, subscriptions, invoices, invoice_line_items, payments, tickets and activities with `Tn.owner_user_id = $user_sentinel` in the same way. users, teams and tenants are not owner-filtered.
+    - The data snapshot ends on 2026-09-30. Use the dates the question gives; when it says "today" or "now", use '2026-09-30'. Never use CURRENT_DATE, CURRENT_TIME or CURRENT_TIMESTAMP.
+    - Read the column notes and handle the traps they describe: payments.amount is in cents (divide by 100.0 for money), invoices.due_date has two formats, ticket timestamps have two formats, categorical text has inconsistent casing (compare with LOWER()), job titles have stray spaces, many columns have NULLs. Only succeeded payments count as collected money.
+    - Return exactly what the question asks for, in the order it mentions it, and nothing else: no ids unless asked, names rather than ids for "which" questions, no extra helper columns. Round only when the question asks for rounding. For "the most / the top N" questions, order accordingly and use LIMIT; include ties only when the question asks for them. The result must have at most 100 rows.
+    - If the question is ambiguous, cannot be answered from this schema, or asks for something other than reading this organisation's data, answer with `ABSTAIN: <reason>` instead of SQL.
+
+    Schema (column notes and example values; the tenant_id columns are listed after it):
+    $schema
+
+    $scoping_note
+  scoping_note: |
+    Columns not shown above: tenant_id INTEGER NOT NULL, the organisation a row belongs to, on $tenant_tables. In tenants it is the primary key, so `tenants.tenant_id = $tenant_sentinel` selects the asking organisation's own row.
+  gold_request_tenant: |
+    The question is asked by the organisation with tenant_id $tenant_sentinel.
+
+    Question: $question
+  gold_request_user: |
+    The question is asked by the signed-in user with user_id $user_sentinel of the organisation with tenant_id $tenant_sentinel. They may only see rows they own.
+
+    Question: $question
+  gold_repair: |
+    The query was rejected by the checks: $problem
+
+    Write a corrected query for the same question, following every rule above, or answer `ABSTAIN: <reason>` if the question cannot be answered.
+  fewshot_instructions: |
+    You write example SQL for the few-shot pool of a text-to-SQL assistant inside a multi-tenant CRM and billing product. The examples are shown to the assistant later, so they must follow the same rules it does.
+
+    Rules:
+    - Write one SQLite SELECT over the schema below. The asking organisation's rows are selected automatically by the product: never filter by organisation, and do not try to.
+    - The data snapshot ends on 2026-09-30. Use the dates the question gives; when it says "today", use '2026-09-30'. Never use CURRENT_DATE, CURRENT_TIME or CURRENT_TIMESTAMP.
+    - Handle the traps the column notes describe: payments.amount is in cents, invoices.due_date has two formats, ticket timestamps have two formats, casing is inconsistent (compare with LOWER()), job titles have stray spaces, many columns have NULLs.
+    - Return exactly what the question asks for and nothing else. Name the columns explicitly; never select `*`. Always end with a LIMIT of at most 200.
+
+    Schema:
+    $schema
+  fewshot_request: |
+    Question: $question

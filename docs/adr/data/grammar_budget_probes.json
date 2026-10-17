@@ -1,0 +1,1970 @@
+{
+ "about": "Grammar-budget probes against the OpenAI Responses API, 2026-10-16 (ADR-005). Each probe sent one grammar as a forced custom tool to gpt-6-luna with reasoning effort none and max_output_tokens 16 (text2sql.llm.LLMClient.grammar_accepted, flex tier). Rejections are HTTP 400 'Invalid lark grammar. regex construction fuel exhausted' and are not billed. Synthetic column names: 'attribute_NNNN_x' padded to 16 chars for feature series (flat alternation), random lowercase letters (seed 7) of the given width for template series.",
+ "probe_counts": {
+  "llmclient_probes": 345,
+  "accepted_and_billed": 167,
+  "rejected": 178,
+  "raw_sdk_probes_before_client_existed": 11,
+  "raw_sdk_accepted": 0
+ },
+ "spend_usd": 0.0159,
+ "first_template_full_schema_probes": [
+  {
+   "grammar": "bird:california_schools",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 65(9): invalid regex \"(?:`2013-14 CALPADS Fall 1 Certification Status`|`Percent \\\\\\\\(%\\\\\\\\) El"
+  },
+  {
+   "grammar": "bird:card_games",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 65(9): invalid regex \"(?:hasAlternativeDeckLimit|scryfallIllustrationId|faceConvertedManaCost|"
+  },
+  {
+   "grammar": "bird:codebase_community",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 65(9): invalid regex \"(?:LastEditorDisplayName|CommunityOwnedDate|PostHistoryTypeId|AcceptedAn"
+  },
+  {
+   "grammar": "bird:debit_card_specializing",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 9(14): regex construction fuel exhausted\\n   7 | compound: select (SET_OP select)*\\n   8 | sel"
+  },
+  {
+   "grammar": "bird:european_football_2",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 65(9): invalid regex \"(?:chanceCreationPositioningClass|buildUpPlayPositioningClass|chanceCrea"
+  },
+  {
+   "grammar": "bird:financial",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 13(23): regex construction fuel exhausted\\n  11 | from_clause: \" FROM \" source join*\\n  12 | s"
+  },
+  {
+   "grammar": "bird:formula_1",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 65(9): invalid regex \"(?:constructorStandingsId|constructorResultsId|driverStandingsId|fastest"
+  },
+  {
+   "grammar": "bird:student_club",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 46(9): invalid regex \" (?:UNION ALL|UNION|INTERSECT|EXCEPT) \" (in regex): regex construction f"
+  },
+  {
+   "grammar": "bird:superhero",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. at 8(9): regex construction fuel exhausted\\n   6 | cte: CTE_NAME \" AS \" \"(\" subquery \")\"\\n   7 | "
+  },
+  {
+   "grammar": "bird:thrombosis_prediction",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. regex construction fuel exhausted', 'type': 'invalid_request_error', 'param': 'tools', 'code': No"
+  },
+  {
+   "grammar": "bird:toxicology",
+   "accepted": false,
+   "error": "Error code: 400 - {'error': {'message': 'Invalid lark grammar. regex construction fuel exhausted', 'type': 'invalid_request_error', 'param': 'tools', 'code': No"
+  }
+ ],
+ "series": [
+  {
+   "kind": "feature",
+   "name": "a",
+   "description": "minimal: SELECT columns FROM table",
+   "max_accepted": 288,
+   "min_rejected": 291,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 288,
+     "accepted": true
+    },
+    {
+     "n": 291,
+     "accepted": false
+    },
+    {
+     "n": 294,
+     "accepted": false
+    },
+    {
+     "n": 301,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "b",
+   "description": "minimal + qualifier, WHERE with comparisons",
+   "max_accepted": 265,
+   "min_rejected": 268,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 265,
+     "accepted": true
+    },
+    {
+     "n": 268,
+     "accepted": false
+    },
+    {
+     "n": 275,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" expr)?\n?expr: column | NUMBER | expr \" AND \" expr2 | column COMPARE NUMBER\nexpr2: column COMPARE NUMBER\ncolumn: QUALIFIER? COLUMN\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nCOMPARE: / (?:<>|<=|>=|!=|=|<|>) /\nNUMBER: /[0-9]{1,18}/\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "c",
+   "description": "first template (precedence tower, complex string regex)",
+   "max_accepted": 0,
+   "min_rejected": 3,
+   "probes": [
+    {
+     "n": 3,
+     "accepted": false
+    },
+    {
+     "n": 6,
+     "accepted": false
+    },
+    {
+     "n": 13,
+     "accepted": false
+    },
+    {
+     "n": 26,
+     "accepted": false
+    },
+    {
+     "n": 52,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query | abstain\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: conjunction | expr \" OR \" conjunction\n?conjunction: negation | conjunction \" AND \" negation\n?negation: predicate | \"NOT \" negation\n?predicate: sum\n    | sum COMPARE sum\n    | sum IS_NULL\n    | sum IN_OP \"(\" (subquery | expr_list) \")\"\n    | sum LIKE_OP sum\n    | sum BETWEEN_OP sum \" AND \" sum\n?sum: product | sum ADD product\n?product: concat | product MUL concat\n?concat: unary | concat \" || \" unary\n?unary: primary | \"-\" unary\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\nabstain: \"ABSTAIN: \" REASON\nREASON: /[^\\x00-\\x1f\\x7f]{1,300}/\n\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nCOMPARE: / (?:<>|<=|>=|!=|=|<|>) /\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nLIKE_OP: / (?:NOT )?LIKE /\nBETWEEN_OP: / (?:NOT )?BETWEEN /\nADD: / [-+] /\nMUL: / [*\\/%] /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|''|(?:-?\\/){1,4}(?:[^'\\\\;\\/*\\-\\x00-\\x1f\\x7f]|'')|(?:-?\\/){0,4}-(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|'')){0,255}(?:(?:-?\\/){1,4}|(?:-?\\/){0,4}-)?'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "ctx1",
+   "description": "COLUMN in 1 context",
+   "max_accepted": 288,
+   "min_rejected": 291,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 288,
+     "accepted": true
+    },
+    {
+     "n": 291,
+     "accepted": false
+    },
+    {
+     "n": 294,
+     "accepted": false
+    },
+    {
+     "n": 301,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" (\"K0WORD \" x0) \" FROM \" SOURCE\nx0: \"L0LIT\" | COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "ctx4",
+   "description": "COLUMN in 4 contexts",
+   "max_accepted": 271,
+   "min_rejected": 275,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 268,
+     "accepted": true
+    },
+    {
+     "n": 271,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" (\"K0WORD \" x0 | \"K1WORD \" x1 | \"K2WORD \" x2 | \"K3WORD \" x3) \" FROM \" SOURCE\nx0: \"L0LIT\" | COLUMN\nx1: \"L1LIT\" | COLUMN\nx2: \"L2LIT\" | COLUMN\nx3: \"L3LIT\" | COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "ctx8",
+   "description": "COLUMN in 8 contexts",
+   "max_accepted": 249,
+   "min_rejected": 252,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 236,
+     "accepted": true
+    },
+    {
+     "n": 249,
+     "accepted": true
+    },
+    {
+     "n": 252,
+     "accepted": false
+    },
+    {
+     "n": 255,
+     "accepted": false
+    },
+    {
+     "n": 262,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" (\"K0WORD \" x0 | \"K1WORD \" x1 | \"K2WORD \" x2 | \"K3WORD \" x3 | \"K4WORD \" x4 | \"K5WORD \" x5 | \"K6WORD \" x6 | \"K7WORD \" x7) \" FROM \" SOURCE\nx0: \"L0LIT\" | COLUMN\nx1: \"L1LIT\" | COLUMN\nx2: \"L2LIT\" | COLUMN\nx3: \"L3LIT\" | COLUMN\nx4: \"L4LIT\" | COLUMN\nx5: \"L5LIT\" | COLUMN\nx6: \"L6LIT\" | COLUMN\nx7: \"L7LIT\" | COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "d",
+   "description": "first template without string literals",
+   "max_accepted": 32,
+   "min_rejected": 35,
+   "probes": [
+    {
+     "n": 26,
+     "accepted": true
+    },
+    {
+     "n": 32,
+     "accepted": true
+    },
+    {
+     "n": 35,
+     "accepted": false
+    },
+    {
+     "n": 39,
+     "accepted": false
+    },
+    {
+     "n": 52,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query | abstain\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: conjunction | expr \" OR \" conjunction\n?conjunction: negation | conjunction \" AND \" negation\n?negation: predicate | \"NOT \" negation\n?predicate: sum\n    | sum COMPARE sum\n    | sum IS_NULL\n    | sum IN_OP \"(\" (subquery | expr_list) \")\"\n    | sum LIKE_OP sum\n    | sum BETWEEN_OP sum \" AND \" sum\n?sum: product | sum ADD product\n?product: concat | product MUL concat\n?concat: unary | concat \" || \" unary\n?unary: primary | \"-\" unary\n?primary: column | NUMBER | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\nabstain: \"ABSTAIN: \" REASON\nREASON: /[^\\x00-\\x1f\\x7f]{1,300}/\n\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nCOMPARE: / (?:<>|<=|>=|!=|=|<|>) /\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nLIKE_OP: / (?:NOT )?LIKE /\nBETWEEN_OP: / (?:NOT )?BETWEEN /\nADD: / [-+] /\nMUL: / [*\\/%] /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "dup1",
+   "description": "minimal with optional qualifier rule",
+   "max_accepted": 284,
+   "min_rejected": 288,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": true
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE\ncolumn: QUALIFIER? COLUMN\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "dup2",
+   "description": "dup1 + bare COLUMN in ORDER BY",
+   "max_accepted": 281,
+   "min_rejected": 284,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" ORDER BY \" COLUMN)?\ncolumn: QUALIFIER? COLUMN\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "dup3",
+   "description": "dup2 with explicit alternatives",
+   "max_accepted": 281,
+   "min_rejected": 284,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" ORDER BY \" COLUMN)?\ncolumn: QUALIFIER COLUMN | COLUMN\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "e",
+   "description": "first template without abstain",
+   "max_accepted": 9,
+   "min_rejected": 13,
+   "probes": [
+    {
+     "n": 6,
+     "accepted": true
+    },
+    {
+     "n": 9,
+     "accepted": true
+    },
+    {
+     "n": 13,
+     "accepted": false
+    },
+    {
+     "n": 26,
+     "accepted": false
+    },
+    {
+     "n": 52,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: conjunction | expr \" OR \" conjunction\n?conjunction: negation | conjunction \" AND \" negation\n?negation: predicate | \"NOT \" negation\n?predicate: sum\n    | sum COMPARE sum\n    | sum IS_NULL\n    | sum IN_OP \"(\" (subquery | expr_list) \")\"\n    | sum LIKE_OP sum\n    | sum BETWEEN_OP sum \" AND \" sum\n?sum: product | sum ADD product\n?product: concat | product MUL concat\n?concat: unary | concat \" || \" unary\n?unary: primary | \"-\" unary\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nCOMPARE: / (?:<>|<=|>=|!=|=|<|>) /\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nLIKE_OP: / (?:NOT )?LIKE /\nBETWEEN_OP: / (?:NOT )?BETWEEN /\nADD: / [-+] /\nMUL: / [*\\/%] /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|''|(?:-?\\/){1,4}(?:[^'\\\\;\\/*\\-\\x00-\\x1f\\x7f]|'')|(?:-?\\/){0,4}-(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|'')){0,255}(?:(?:-?\\/){1,4}|(?:-?\\/){0,4}-)?'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f",
+   "description": "first template without function calls",
+   "max_accepted": 19,
+   "min_rejected": 22,
+   "probes": [
+    {
+     "n": 13,
+     "accepted": true
+    },
+    {
+     "n": 19,
+     "accepted": true
+    },
+    {
+     "n": 22,
+     "accepted": false
+    },
+    {
+     "n": 26,
+     "accepted": false
+    },
+    {
+     "n": 52,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query | abstain\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: conjunction | expr \" OR \" conjunction\n?conjunction: negation | conjunction \" AND \" negation\n?negation: predicate | \"NOT \" negation\n?predicate: sum\n    | sum COMPARE sum\n    | sum IS_NULL\n    | sum IN_OP \"(\" (subquery | expr_list) \")\"\n    | sum LIKE_OP sum\n    | sum BETWEEN_OP sum \" AND \" sum\n?sum: product | sum ADD product\n?product: concat | product MUL concat\n?concat: unary | concat \" || \" unary\n?unary: primary | \"-\" unary\n?primary: column | NUMBER | STRING | CONSTANT | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\nabstain: \"ABSTAIN: \" REASON\nREASON: /[^\\x00-\\x1f\\x7f]{1,300}/\n\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nCOMPARE: / (?:<>|<=|>=|!=|=|<|>) /\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nLIKE_OP: / (?:NOT )?LIKE /\nBETWEEN_OP: / (?:NOT )?BETWEEN /\nADD: / [-+] /\nMUL: / [*\\/%] /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|''|(?:-?\\/){1,4}(?:[^'\\\\;\\/*\\-\\x00-\\x1f\\x7f]|'')|(?:-?\\/){0,4}-(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|'')){0,255}(?:(?:-?\\/){1,4}|(?:-?\\/){0,4}-)?'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f1",
+   "description": "flat without CTEs",
+   "max_accepted": 78,
+   "min_rejected": 81,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 78,
+     "accepted": true
+    },
+    {
+     "n": 81,
+     "accepted": false
+    },
+    {
+     "n": 84,
+     "accepted": false
+    },
+    {
+     "n": 91,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: compound order_by? limit?\nsubquery: compound order_by? limit?\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" (subquery | expr_list) \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f2",
+   "description": "flat without expression subqueries",
+   "max_accepted": 71,
+   "min_rejected": 74,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 65,
+     "accepted": true
+    },
+    {
+     "n": 71,
+     "accepted": true
+    },
+    {
+     "n": 74,
+     "accepted": false
+    },
+    {
+     "n": 78,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" expr_list \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f3",
+   "description": "flat without CASE",
+   "max_accepted": 81,
+   "min_rejected": 84,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 78,
+     "accepted": true
+    },
+    {
+     "n": 81,
+     "accepted": true
+    },
+    {
+     "n": 84,
+     "accepted": false
+    },
+    {
+     "n": 91,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" (subquery | expr_list) \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | call | cast\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f4",
+   "description": "flat without function calls",
+   "max_accepted": 91,
+   "min_rejected": 94,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 78,
+     "accepted": true
+    },
+    {
+     "n": 91,
+     "accepted": true
+    },
+    {
+     "n": 94,
+     "accepted": false
+    },
+    {
+     "n": 98,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" (subquery | expr_list) \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f5",
+   "description": "flat without joins",
+   "max_accepted": 78,
+   "min_rejected": 81,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 78,
+     "accepted": true
+    },
+    {
+     "n": 81,
+     "accepted": false
+    },
+    {
+     "n": 84,
+     "accepted": false
+    },
+    {
+     "n": 91,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" (subquery | expr_list) \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nDIRECTION: / (?:ASC|DESC)/\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f6",
+   "description": "flat without set operations",
+   "max_accepted": 71,
+   "min_rejected": 74,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 65,
+     "accepted": true
+    },
+    {
+     "n": 71,
+     "accepted": true
+    },
+    {
+     "n": 74,
+     "accepted": false
+    },
+    {
+     "n": 78,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" (subquery | expr_list) \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "f7",
+   "description": "flat without ORDER BY / LIMIT",
+   "max_accepted": 94,
+   "min_rejected": 98,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 78,
+     "accepted": true
+    },
+    {
+     "n": 91,
+     "accepted": true
+    },
+    {
+     "n": 94,
+     "accepted": true
+    },
+    {
+     "n": 98,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound\nsubquery: compound\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" (subquery | expr_list) \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nIS_NULL: / IS (?:NOT )?NULL/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "flat",
+   "description": "first template with a flat expression grammar",
+   "max_accepted": 65,
+   "min_rejected": 68,
+   "probes": [
+    {
+     "n": 52,
+     "accepted": true
+    },
+    {
+     "n": 65,
+     "accepted": true
+    },
+    {
+     "n": 68,
+     "accepted": false
+    },
+    {
+     "n": 71,
+     "accepted": false
+    },
+    {
+     "n": 78,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: term (BINOP term)*\n?term: \"NOT \" term | \"-\" term | operand\n?operand: primary (IS_NULL | IN_OP \"(\" (subquery | expr_list) \")\")?\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\n\nBINOP: / (?:NOT BETWEEN|NOT LIKE|BETWEEN|LIKE|AND|OR|<>|<=|>=|!=|=|<|>|\\|\\||[-+*\\/%]) /\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "g",
+   "description": "first template with a simpler number regex",
+   "max_accepted": 0,
+   "min_rejected": 3,
+   "probes": [
+    {
+     "n": 3,
+     "accepted": false
+    },
+    {
+     "n": 6,
+     "accepted": false
+    },
+    {
+     "n": 13,
+     "accepted": false
+    },
+    {
+     "n": 26,
+     "accepted": false
+    },
+    {
+     "n": 52,
+     "accepted": false
+    },
+    {
+     "n": 105,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "// SQLite SELECT grammar for database x (mode=benchmark, max_rows=1000).\nstart: query | abstain\nquery: with_clause? compound order_by? limit?\nsubquery: compound order_by? limit?\nwith_clause: \"WITH \" cte (\", \" cte)* \" \"\ncte: CTE_NAME \" AS \" \"(\" subquery \")\"\ncompound: select (SET_OP select)*\nselect: \"SELECT \" DISTINCT? select_list from_clause? where_clause? group_by? having?\nselect_list: select_item (\", \" select_item)*\nselect_item: expr (\" AS \" COLUMN)? | \"*\" | QUALIFIER \"*\"\nfrom_clause: \" FROM \" source join*\nsource: (SOURCE | \"(\" subquery \")\") (\" AS \" TABLE_ALIAS)?\njoin: JOIN_OP source (\" ON \" expr)? | \", \" source\nwhere_clause: \" WHERE \" expr\ngroup_by: \" GROUP BY \" expr_list\nhaving: \" HAVING \" expr\norder_by: \" ORDER BY \" order_item (\", \" order_item)*\norder_item: expr DIRECTION? NULLS_ORDER?\nlimit: \" LIMIT \" LIMIT_N (\" OFFSET \" OFFSET_N)?\nexpr_list: expr (\", \" expr)*\n?expr: conjunction | expr \" OR \" conjunction\n?conjunction: negation | conjunction \" AND \" negation\n?negation: predicate | \"NOT \" negation\n?predicate: sum\n    | sum COMPARE sum\n    | sum IS_NULL\n    | sum IN_OP \"(\" (subquery | expr_list) \")\"\n    | sum LIKE_OP sum\n    | sum BETWEEN_OP sum \" AND \" sum\n?sum: product | sum ADD product\n?product: concat | product MUL concat\n?concat: unary | concat \" || \" unary\n?unary: primary | \"-\" unary\n?primary: column | NUMBER | STRING | CONSTANT | call | cast | case\n    | \"(\" expr \")\" | \"(\" subquery \")\" | \"EXISTS(\" subquery \")\"\ncolumn: QUALIFIER? COLUMN\ncall: \"COUNT(\" (\"*\" | DISTINCT? expr) \")\"\n    | AGGREGATE DISTINCT? expr_list \")\"\n    | FUNCTION expr_list \")\"\ncast: \"CAST(\" expr \" AS \" CAST_TYPE \")\"\ncase: \"CASE \" (expr \" WHEN \" | \"WHEN \") expr \" THEN \" expr (\" WHEN \" expr \" THEN \" expr)* (\" ELSE \" expr)? \" END\"\nabstain: \"ABSTAIN: \" REASON\nREASON: /[^\\x00-\\x1f\\x7f]{1,300}/\n\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nCOMPARE: / (?:<>|<=|>=|!=|=|<|>) /\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nLIKE_OP: / (?:NOT )?LIKE /\nBETWEEN_OP: / (?:NOT )?BETWEEN /\nADD: / [-+] /\nMUL: / [*\\/%] /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nNUMBER: /[0-9]{1,18}/\nSTRING: /'(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|''|(?:-?\\/){1,4}(?:[^'\\\\;\\/*\\-\\x00-\\x1f\\x7f]|'')|(?:-?\\/){0,4}-(?:[^'\\\\;\\/\\-\\x00-\\x1f\\x7f]|'')){0,255}(?:(?:-?\\/){1,4}|(?:-?\\/){0,4}-)?'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "h",
+   "description": "minimal + simple string literal {0,255}",
+   "max_accepted": 271,
+   "min_rejected": 275,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 268,
+     "accepted": true
+    },
+    {
+     "n": 271,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" COLUMN \" = \" STRING)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "i",
+   "description": "minimal + simple string literal *",
+   "max_accepted": 271,
+   "min_rejected": 275,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 268,
+     "accepted": true
+    },
+    {
+     "n": 271,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" COLUMN \" = \" STRING)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|'')*'/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "inv",
+   "description": "every lexeme of the first template, used once in a flat rule",
+   "max_accepted": 157,
+   "min_rejected": 160,
+   "probes": [
+    {
+     "n": 105,
+     "accepted": true
+    },
+    {
+     "n": 157,
+     "accepted": true
+    },
+    {
+     "n": 160,
+     "accepted": false
+    },
+    {
+     "n": 163,
+     "accepted": false
+    },
+    {
+     "n": 170,
+     "accepted": false
+    },
+    {
+     "n": 183,
+     "accepted": false
+    },
+    {
+     "n": 210,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" COLUMN (\", \" COLUMN)* \" FROM \" SOURCE (\" WHERE \" anylex)?\nanylex: \" \" | \" AND \" | \" AS \" | \" ELSE \" | \" END\" | \" FROM \" | \" GROUP BY \" | \" HAVING \" | \" LIMIT \" | \" OFFSET \" | \" ON \" | \" OR \" | \" ORDER BY \" | \" THEN \" | \" WHEN \" | \" WHERE \" | \" || \" | \"(\" | \")\" | \"*\" | \", \" | \"-\" | \"CASE \" | \"CAST(\" | \"COUNT(\" | \"EXISTS(\" | \"NOT \" | \"SELECT \" | \"WHEN \" | \"WITH \" | DISTINCT | SET_OP | JOIN_OP | DIRECTION | COMPARE | IS_NULL | NULLS_ORDER | CONSTANT | IN_OP | LIKE_OP | BETWEEN_OP | ADD | MUL | CAST_TYPE | AGGREGATE | FUNCTION | TABLE_ALIAS | CTE_NAME | QUALIFIER | NUMBER | STRING | LIMIT_N | OFFSET_N\nDISTINCT: \"DISTINCT \"\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\nJOIN_OP: / (?:INNER |LEFT OUTER |LEFT |CROSS )?JOIN /\nDIRECTION: / (?:ASC|DESC)/\nCOMPARE: / (?:<>|<=|>=|!=|=|<|>) /\nIS_NULL: / IS (?:NOT )?NULL/\nNULLS_ORDER: / NULLS (?:FIRST|LAST)/\nCONSTANT: /(?:CURRENT_TIMESTAMP|CURRENT_DATE|CURRENT_TIME|FALSE|NULL|TRUE)/\nIN_OP: / (?:NOT )?IN /\nLIKE_OP: / (?:NOT )?LIKE /\nBETWEEN_OP: / (?:NOT )?BETWEEN /\nADD: / [-+] /\nMUL: / [*\\/%] /\nCAST_TYPE: /(?:INTEGER|NUMERIC|REAL|TEXT)/\nAGGREGATE: /(?:SUM|AVG|MIN|MAX)\\(/\nFUNCTION: /(?:JULIANDAY|COALESCE|STRFTIME|REPLACE|LENGTH|NULLIF|SUBSTR|INSTR|LOWER|ROUND|UPPER|DATE|TRIM|ABS|IIF)\\(/\nTABLE_ALIAS: /T[1-9]/\nCTE_NAME: /cte[1-5]/\nQUALIFIER: /(?:T[1-9]|cte[1-5])\\./\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\nSTRING: /'(?:[^'\\\\;\\x00-\\x1f\\x7f]|''){0,255}'/\nLIMIT_N: /(?:1000|[1-9][0-9]{2}|[1-9][0-9]{1}|[1-9])/\nOFFSET_N: /[0-9]{1,6}/\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "j",
+   "description": "minimal + 30 space-led keyword literals in one rule",
+   "max_accepted": 249,
+   "min_rejected": 252,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 236,
+     "accepted": true
+    },
+    {
+     "n": 249,
+     "accepted": true
+    },
+    {
+     "n": 252,
+     "accepted": false
+    },
+    {
+     "n": 255,
+     "accepted": false
+    },
+    {
+     "n": 262,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" COLUMN kw COLUMN)?\nkw: \" K00WORD \" | \" K01WORD \" | \" K02WORD \" | \" K03WORD \" | \" K04WORD \" | \" K05WORD \" | \" K06WORD \" | \" K07WORD \" | \" K08WORD \" | \" K09WORD \" | \" K10WORD \" | \" K11WORD \" | \" K12WORD \" | \" K13WORD \" | \" K14WORD \" | \" K15WORD \" | \" K16WORD \" | \" K17WORD \" | \" K18WORD \" | \" K19WORD \" | \" K20WORD \" | \" K21WORD \" | \" K22WORD \" | \" K23WORD \" | \" K24WORD \" | \" K25WORD \" | \" K26WORD \" | \" K27WORD \" | \" K28WORD \" | \" K29WORD \"\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "jdistinct",
+   "description": "as j, keywords with distinct first bytes",
+   "max_accepted": 249,
+   "min_rejected": 252,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 236,
+     "accepted": true
+    },
+    {
+     "n": 249,
+     "accepted": true
+    },
+    {
+     "n": 252,
+     "accepted": false
+    },
+    {
+     "n": 255,
+     "accepted": false
+    },
+    {
+     "n": 262,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" COLUMN kw COLUMN)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nkw: \"0K00WORD0\" | \"1K01WORD1\" | \"2K02WORD2\" | \"3K03WORD3\" | \"4K04WORD4\" | \"5K05WORD5\" | \"6K06WORD6\" | \"7K07WORD7\" | \"8K08WORD8\" | \"9K09WORD9\" | \"!K10WORD!\" | \"#K11WORD#\" | \"$K12WORD$\" | \"%K13WORD%\" | \"&K14WORD&\" | \"+K15WORD+\" | \"-K16WORD-\" | \"/K17WORD/\" | \"<K18WORD<\" | \"=K19WORD=\" | \">K20WORD>\" | \"?K21WORD?\" | \"@K22WORD@\" | \"^K23WORD^\" | \"_K24WORD_\" | \"~K25WORD~\" | \";K26WORD;\" | \":K27WORD:\" | \"[K28WORD[\" | \"]K29WORD]\"\n"
+  },
+  {
+   "kind": "feature",
+   "name": "k",
+   "description": "minimal + abstain reason {1,300}",
+   "max_accepted": 271,
+   "min_rejected": 275,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 268,
+     "accepted": true
+    },
+    {
+     "n": 271,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE | \"ABSTAIN: \" REASON\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nREASON: /[^\\x00-\\x1f\\x7f]{1,300}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "l",
+   "description": "minimal + abstain reason +",
+   "max_accepted": 271,
+   "min_rejected": 275,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 268,
+     "accepted": true
+    },
+    {
+     "n": 271,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE | \"ABSTAIN: \" REASON\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nREASON: /[^\\x00-\\x1f\\x7f]+/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "m",
+   "description": "minimal + 30 function-like literals",
+   "max_accepted": 249,
+   "min_rejected": 252,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 236,
+     "accepted": true
+    },
+    {
+     "n": 249,
+     "accepted": true
+    },
+    {
+     "n": 252,
+     "accepted": false
+    },
+    {
+     "n": 255,
+     "accepted": false
+    },
+    {
+     "n": 262,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" kw COLUMN \")\")?\nkw: \"K00WORD(\" | \"K01WORD(\" | \"K02WORD(\" | \"K03WORD(\" | \"K04WORD(\" | \"K05WORD(\" | \"K06WORD(\" | \"K07WORD(\" | \"K08WORD(\" | \"K09WORD(\" | \"K10WORD(\" | \"K11WORD(\" | \"K12WORD(\" | \"K13WORD(\" | \"K14WORD(\" | \"K15WORD(\" | \"K16WORD(\" | \"K17WORD(\" | \"K18WORD(\" | \"K19WORD(\" | \"K20WORD(\" | \"K21WORD(\" | \"K22WORD(\" | \"K23WORD(\" | \"K24WORD(\" | \"K25WORD(\" | \"K26WORD(\" | \"K27WORD(\" | \"K28WORD(\" | \"K29WORD(\"\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "n",
+   "description": "minimal + 4-member keyword regex",
+   "max_accepted": 281,
+   "min_rejected": 284,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: SET_OP\nSET_OP: / (?:UNION ALL|UNION|INTERSECT|EXCEPT) /\n"
+  },
+  {
+   "kind": "feature",
+   "name": "o",
+   "description": "minimal + same 4 keywords as literals",
+   "max_accepted": 281,
+   "min_rejected": 284,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: \" UNION ALL \" | \" UNION \" | \" INTERSECT \" | \" EXCEPT \"\n"
+  },
+  {
+   "kind": "feature",
+   "name": "occ",
+   "description": "minimal + 55 extra references to an existing literal",
+   "max_accepted": 232,
+   "min_rejected": 236,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 223,
+     "accepted": true
+    },
+    {
+     "n": 229,
+     "accepted": true
+    },
+    {
+     "n": 232,
+     "accepted": true
+    },
+    {
+     "n": 236,
+     "accepted": false
+    },
+    {
+     "n": 262,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: ( \", \") | ( \", \" \", \") | ( \", \" \", \" \", \") | ( \", \" \", \" \", \" \", \") | ( \", \" \", \" \", \" \", \" \", \") | ( \", \" \", \" \", \" \", \" \", \" \", \") | ( \", \" \", \" \", \" \", \" \", \" \", \" \", \") | ( \", \" \", \" \", \" \", \" \", \" \", \" \", \" \", \") | ( \", \" \", \" \", \" \", \" \", \" \", \" \", \" \", \" \", \") | ( \", \" \", \" \", \" \", \" \", \" \", \" \", \" \", \" \", \" \", \")\n"
+  },
+  {
+   "kind": "feature",
+   "name": "ovl8",
+   "description": "as ctx8, companion literals share the columns' first byte",
+   "max_accepted": 210,
+   "min_rejected": 262,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" (\"K0WORD \" x0 | \"K1WORD \" x1 | \"K2WORD \" x2 | \"K3WORD \" x3 | \"K4WORD \" x4 | \"K5WORD \" x5 | \"K6WORD \" x6 | \"K7WORD \" x7) \" FROM \" SOURCE\nx0: \"attL0LIT\" | COLUMN\nx1: \"attL1LIT\" | COLUMN\nx2: \"attL2LIT\" | COLUMN\nx3: \"attL3LIT\" | COLUMN\nx4: \"attL4LIT\" | COLUMN\nx5: \"attL5LIT\" | COLUMN\nx6: \"attL6LIT\" | COLUMN\nx7: \"attL7LIT\" | COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "p",
+   "description": "minimal + T[1-9] regex",
+   "max_accepted": 281,
+   "min_rejected": 284,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: TABLE_ALIAS\nTABLE_ALIAS: /T[1-9]/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "q",
+   "description": "minimal + number regex",
+   "max_accepted": 281,
+   "min_rejected": 284,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: NUMBER\nNUMBER: /[0-9]{1,18}(?:\\.[0-9]{0,18})?(?:[eE][+-]?[0-9]{1,3})?/\n"
+  },
+  {
+   "kind": "feature",
+   "name": "r",
+   "description": "minimal + [-+] regex",
+   "max_accepted": 281,
+   "min_rejected": 284,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: ADD\nADD: / [-+] /\n"
+  },
+  {
+   "kind": "feature",
+   "name": "s",
+   "description": "minimal + 5 one-member regex terminals",
+   "max_accepted": 271,
+   "min_rejected": 275,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 268,
+     "accepted": true
+    },
+    {
+     "n": 271,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": false
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: R1 | R2 | R3 | R4 | R5\nR1: / AAA1 /\nR2: / BBB2 /\nR3: / CCC3 /\nR4: / DDD4 /\nR5: / EEE5 /\n"
+  },
+  {
+   "kind": "feature",
+   "name": "t",
+   "description": "minimal + 2 literals",
+   "max_accepted": 284,
+   "min_rejected": 288,
+   "probes": [
+    {
+     "n": 210,
+     "accepted": true
+    },
+    {
+     "n": 262,
+     "accepted": true
+    },
+    {
+     "n": 275,
+     "accepted": true
+    },
+    {
+     "n": 281,
+     "accepted": true
+    },
+    {
+     "n": 284,
+     "accepted": true
+    },
+    {
+     "n": 288,
+     "accepted": false
+    },
+    {
+     "n": 315,
+     "accepted": false
+    }
+   ],
+   "template": "start: \"SELECT \" column (\", \" column)* \" FROM \" SOURCE (\" WHERE \" x)?\ncolumn: COLUMN\nSOURCE: /(?:items|cte[1-5])/\nCOLUMN: /{cols}/\nx: \"x\"\n"
+  },
+  {
+   "kind": "feature",
+   "name": "trie",
+   "description": "",
+   "max_accepted": 1429,
+   "min_rejected": 1435,
+   "probes": [
+    {
+     "n": 750,
+     "accepted": true
+    },
+    {
+     "n": 1125,
+     "accepted": true
+    },
+    {
+     "n": 1312,
+     "accepted": true
+    },
+    {
+     "n": 1406,
+     "accepted": true
+    },
+    {
+     "n": 1429,
+     "accepted": true
+    },
+    {
+     "n": 1435,
+     "accepted": false
+    },
+    {
+     "n": 1441,
+     "accepted": false
+    },
+    {
+     "n": 1453,
+     "accepted": false
+    },
+    {
+     "n": 1500,
+     "accepted": false
+    }
+   ]
+  },
+  {
+   "kind": "first_template_string",
+   "name": "simple255",
+   "description": "",
+   "max_accepted": 18,
+   "min_rejected": 21,
+   "probes": [
+    {
+     "n": 12,
+     "accepted": true
+    },
+    {
+     "n": 18,
+     "accepted": true
+    },
+    {
+     "n": 21,
+     "accepted": false
+    },
+    {
+     "n": 25,
+     "accepted": false
+    },
+    {
+     "n": 50,
+     "accepted": false
+    },
+    {
+     "n": 100,
+     "accepted": false
+    },
+    {
+     "n": 200,
+     "accepted": false
+    }
+   ]
+  },
+  {
+   "kind": "template",
+   "name": "compact",
+   "description": "",
+   "max_accepted": 398,
+   "min_rejected": null,
+   "probes": [
+    {
+     "n": 200,
+     "accepted": true
+    },
+    {
+     "n": 300,
+     "accepted": true
+    },
+    {
+     "n": 350,
+     "accepted": true
+    },
+    {
+     "n": 375,
+     "accepted": true
+    },
+    {
+     "n": 387,
+     "accepted": true
+    },
+    {
+     "n": 393,
+     "accepted": true
+    },
+    {
+     "n": 396,
+     "accepted": true
+    },
+    {
+     "n": 398,
+     "accepted": true
+    }
+   ]
+  },
+  {
+   "kind": "template",
+   "name": "compact_random",
+   "description": "",
+   "max_accepted": 215,
+   "min_rejected": 217,
+   "probes": [
+    {
+     "n": 150,
+     "accepted": true
+    },
+    {
+     "n": 187,
+     "accepted": true
+    },
+    {
+     "n": 206,
+     "accepted": true
+    },
+    {
+     "n": 215,
+     "accepted": true
+    },
+    {
+     "n": 217,
+     "accepted": false
+    },
+    {
+     "n": 220,
+     "accepted": false
+    },
+    {
+     "n": 225,
+     "accepted": false
+    },
+    {
+     "n": 300,
+     "accepted": false
+    }
+   ]
+  },
+  {
+   "kind": "template",
+   "name": "compact_w16",
+   "description": "",
+   "max_accepted": 215,
+   "min_rejected": 216,
+   "probes": [
+    {
+     "n": 215,
+     "accepted": true
+    },
+    {
+     "n": 216,
+     "accepted": false
+    },
+    {
+     "n": 218,
+     "accepted": false
+    },
+    {
+     "n": 222,
+     "accepted": false
+    }
+   ]
+  },
+  {
+   "kind": "template",
+   "name": "compact_w30",
+   "description": "",
+   "max_accepted": 123,
+   "min_rejected": 125,
+   "probes": [
+    {
+     "n": 100,
+     "accepted": true
+    },
+    {
+     "n": 112,
+     "accepted": true
+    },
+    {
+     "n": 118,
+     "accepted": true
+    },
+    {
+     "n": 121,
+     "accepted": true
+    },
+    {
+     "n": 123,
+     "accepted": true
+    },
+    {
+     "n": 125,
+     "accepted": false
+    },
+    {
+     "n": 150,
+     "accepted": false
+    },
+    {
+     "n": 200,
+     "accepted": false
+    }
+   ]
+  },
+  {
+   "kind": "template",
+   "name": "compact_w8",
+   "description": "",
+   "max_accepted": 376,
+   "min_rejected": 378,
+   "probes": [
+    {
+     "n": 200,
+     "accepted": true
+    },
+    {
+     "n": 300,
+     "accepted": true
+    },
+    {
+     "n": 350,
+     "accepted": true
+    },
+    {
+     "n": 375,
+     "accepted": true
+    },
+    {
+     "n": 376,
+     "accepted": true
+    },
+    {
+     "n": 378,
+     "accepted": false
+    },
+    {
+     "n": 381,
+     "accepted": false
+    },
+    {
+     "n": 387,
+     "accepted": false
+    },
+    {
+     "n": 400,
+     "accepted": false
+    }
+   ]
+  },
+  {
+   "kind": "template",
+   "name": "simple_string",
+   "description": "",
+   "max_accepted": 34,
+   "min_rejected": 35,
+   "probes": [
+    {
+     "n": 18,
+     "accepted": true
+    },
+    {
+     "n": 27,
+     "accepted": true
+    },
+    {
+     "n": 32,
+     "accepted": true
+    },
+    {
+     "n": 34,
+     "accepted": true
+    },
+    {
+     "n": 35,
+     "accepted": false
+    },
+    {
+     "n": 37,
+     "accepted": false
+    },
+    {
+     "n": 75,
+     "accepted": false
+    },
+    {
+     "n": 150,
+     "accepted": false
+    }
+   ]
+  }
+ ],
+ "final_template_real_grammars": [
+  {
+   "grammar": "california_schools",
+   "fingerprint": "be9528fd34cea93d0c5d66142dabf01c06a9869f46c71d559665e38d37bbe8ba",
+   "accepted": true,
+   "chars": 2817,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 1041,
+   "regex_alternatives": 144,
+   "api_load_estimate": 0.5485
+  },
+  {
+   "grammar": "card_games",
+   "fingerprint": "3eca726db436f47af201bcd598f4de0289ddb61dffc8421a2f82bdea0a8f503a",
+   "accepted": true,
+   "chars": 2897,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 1118,
+   "regex_alternatives": 157,
+   "api_load_estimate": 0.5679
+  },
+  {
+   "grammar": "codebase_community",
+   "fingerprint": "efeceb6ce6c4f0abe76056380c369ea85f5532f14572a5029c88765f7ca4f301",
+   "accepted": true,
+   "chars": 2435,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 779,
+   "regex_alternatives": 115,
+   "api_load_estimate": 0.4919
+  },
+  {
+   "grammar": "debit_card_specializing",
+   "fingerprint": "ef6e5c9e721aff0c04ace017d4db38e3e4fb154e11abd205a51f4f2e63cbbfc4",
+   "accepted": true,
+   "chars": 2024,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 482,
+   "regex_alternatives": 77,
+   "api_load_estimate": 0.4245
+  },
+  {
+   "grammar": "european_football_2",
+   "fingerprint": "7c6afd5a4846e19c81d50e5c0c15a320099d50c004ac5ad8517a14cc8bd13919",
+   "accepted": true,
+   "chars": 3233,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 1267,
+   "regex_alternatives": 232,
+   "api_load_estimate": 0.636
+  },
+  {
+   "grammar": "financial",
+   "fingerprint": "e5ef2769eb483c7baa8fbf89c3658f1046df92ba419215e87d49184b66ae62b5",
+   "accepted": true,
+   "chars": 2117,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 533,
+   "regex_alternatives": 103,
+   "api_load_estimate": 0.448
+  },
+  {
+   "grammar": "formula_1",
+   "fingerprint": "5c829ffb3d624ac135e18c4a2a3ae6ba4286aa7fb48d610e0b8a61e73e45b9ef",
+   "accepted": true,
+   "chars": 2312,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 666,
+   "regex_alternatives": 115,
+   "api_load_estimate": 0.4751
+  },
+  {
+   "grammar": "student_club",
+   "fingerprint": "e04b3319ca66a2d975d2bc151ba0da569722a22eb9c94bf510142463ac3896e7",
+   "accepted": true,
+   "chars": 2255,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 646,
+   "regex_alternatives": 106,
+   "api_load_estimate": 0.4666
+  },
+  {
+   "grammar": "superhero",
+   "fingerprint": "04eb865b0fad1bc7b589e9d46d156a17401aa5a3d34a03e94d23a723e128ee0e",
+   "accepted": true,
+   "chars": 2136,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 563,
+   "regex_alternatives": 87,
+   "api_load_estimate": 0.4427
+  },
+  {
+   "grammar": "thrombosis_prediction",
+   "fingerprint": "413867e7893ebe73b0aece64048ca867a8f0047fdc418efb1ae93d4101ac625a",
+   "accepted": true,
+   "chars": 2210,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 574,
+   "regex_alternatives": 120,
+   "api_load_estimate": 0.4646
+  },
+  {
+   "grammar": "toxicology",
+   "fingerprint": "f6446d9bdfa880e2094ae0d7bdad1e81431ce90eff6784dbf3367495ed9fcc74",
+   "accepted": true,
+   "chars": 1892,
+   "rules": 13,
+   "symbol_refs": 86,
+   "regex_atoms": 388,
+   "regex_alternatives": 67,
+   "api_load_estimate": 0.4045
+  },
+  {
+   "grammar": "european_football_2 (abstain)",
+   "fingerprint": "0263e737713d43c63bd5b9c670d5d63079c17d5bb615b3c1ba4c4445e4cc6c51",
+   "accepted": true,
+   "chars": 3305,
+   "rules": 14,
+   "symbol_refs": 89,
+   "regex_atoms": 1268,
+   "regex_alternatives": 232,
+   "api_load_estimate": 0.6468
+  },
+  {
+   "grammar": "california_schools (abstain)",
+   "fingerprint": "a5baa8fe2a8280aedd38eebb4c13af57b2dd86ab335a2cfe81871e6c0de2f076",
+   "accepted": true,
+   "chars": 2889,
+   "rules": 14,
+   "symbol_refs": 89,
+   "regex_atoms": 1042,
+   "regex_alternatives": 144,
+   "api_load_estimate": 0.5593
+  },
+  {
+   "grammar": "saas crm (tenant, abstain, max_rows=200)",
+   "fingerprint": "f7f1fae592214450d93cdc1ed1963421c9a36f3e1bc4b2938c801930cad3fc9d",
+   "accepted": true,
+   "chars": 2943,
+   "rules": 14,
+   "symbol_refs": 88,
+   "regex_atoms": 1126,
+   "regex_alternatives": 155,
+   "api_load_estimate": 0.5749
+  }
+ ]
+}

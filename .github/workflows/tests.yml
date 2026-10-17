@@ -1,0 +1,39 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # No API key exists in CI; any cache miss raises instead of calling OpenAI.
+  OFFLINE: "true"
+  T2SQL_PHASE: ci
+
+jobs:
+  tests:
+    name: unit and property tests, coverage gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Generate the seeded SaaS database
+        run: uv run --frozen python -m text2sql.data.saas.generate
+      # Pipeline tests on the SaaS database read its catalog; the LLM column descriptions
+      # replay from the committed response-cache shards (OFFLINE=true, no key needed).
+      - name: Build the SaaS catalog from the response cache
+        run: uv run --frozen python -m text2sql.catalog build --dataset saas
+      # Branch coverage gates: >= 85% on safety/, grammar/, execution/; 100% on the validator.
+      # BIRD-gated tests are skipped here and run in the smoke-eval workflow, which has the data.
+      - run: make coverage

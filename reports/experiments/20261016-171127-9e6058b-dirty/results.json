@@ -1,0 +1,618 @@
+{
+  "schema_version": 1,
+  "run": {
+    "run_id": "20261016T171127-f5a69a",
+    "git_sha": "9e6058ba110908fba8be69f59edf24a618ad2e41-dirty",
+    "timestamp": "2026-10-16T17:11:27.465850Z",
+    "config_name": "best",
+    "config": {
+      "pipeline": {
+        "name": "best",
+        "use_evidence": false,
+        "question_analysis": false,
+        "value_retrieval": false,
+        "schema_linking": false,
+        "fewshot_k": 0,
+        "strategies": [
+          "direct_full",
+          "divide_conquer",
+          "query_plan"
+        ],
+        "n_candidates": 1,
+        "repair": true,
+        "max_repairs": 2,
+        "literal_check": true,
+        "selector": "vote",
+        "judge_threshold": 1.0,
+        "cheap_path": false,
+        "grammar": true,
+        "generator_effort": null,
+        "explain": false,
+        "bird_conventions": true
+      },
+      "generator_model": "gpt-6.1-sol",
+      "small_model": "gpt-6-luna",
+      "embedding_model": "text-embedding-3-small",
+      "small_effort": "low",
+      "service_tier": "flex",
+      "limit": null,
+      "sample_seed": 20261016
+    },
+    "overrides": {},
+    "n_candidates": 1,
+    "effort": "medium",
+    "dataset": "bird_arcwise",
+    "split": "dev",
+    "with_evidence": false,
+    "questions_planned": 349,
+    "partial": false,
+    "partial_reason": null,
+    "spend": {
+      "billed_usd": 0.0989594,
+      "priced_usd": 0.5230403999999998,
+      "budget_usd": 6.0,
+      "calls": 431,
+      "cache_hits": 321,
+      "input_tokens": 377874,
+      "cached_tokens": 324155,
+      "output_tokens": 20724,
+      "reasoning_tokens": 8269
+    }
+  },
+  "summary": {
+    "overall": {
+      "n": 349,
+      "ex": {
+        "k": 270,
+        "n": 349,
+        "value": 0.7736389684813754,
+        "ci_low": 0.7306590257879656,
+        "ci_high": 0.8166189111747851,
+        "wilson_low": 0.7268938102154016,
+        "wilson_high": 0.8144257972887204
+      },
+      "pass_at_n": {
+        "k": 270,
+        "n": 349,
+        "value": 0.7736389684813754,
+        "ci_low": 0.7306590257879656,
+        "ci_high": 0.8166189111747851,
+        "wilson_low": 0.7268938102154016,
+        "wilson_high": 0.8144257972887204
+      },
+      "selection_accuracy": 1.0,
+      "cost_per_question_usd": 0.0014826779369627506,
+      "latency_p50_s": 3.4557845020026434,
+      "latency_p95_s": 6.630158686201318
+    },
+    "by_difficulty": {
+      "simple": {
+        "n": 104,
+        "ex": {
+          "k": 85,
+          "n": 104,
+          "value": 0.8173076923076923,
+          "ci_low": 0.7403846153846154,
+          "ci_high": 0.8846153846153846,
+          "wilson_low": 0.7322037581041859,
+          "wilson_high": 0.8798057670056042
+        },
+        "pass_at_n": {
+          "k": 85,
+          "n": 104,
+          "value": 0.8173076923076923,
+          "ci_low": 0.7403846153846154,
+          "ci_high": 0.8846153846153846,
+          "wilson_low": 0.7322037581041859,
+          "wilson_high": 0.8798057670056042
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0013058033653846153,
+        "latency_p50_s": 3.1253732905024663,
+        "latency_p95_s": 6.937957173574246
+      },
+      "moderate": {
+        "n": 174,
+        "ex": {
+          "k": 135,
+          "n": 174,
+          "value": 0.7758620689655172,
+          "ci_low": 0.7126436781609196,
+          "ci_high": 0.8390804597701149,
+          "wilson_low": 0.7083254761755626,
+          "wilson_high": 0.8314811619199476
+        },
+        "pass_at_n": {
+          "k": 135,
+          "n": 174,
+          "value": 0.7758620689655172,
+          "ci_low": 0.7126436781609196,
+          "ci_high": 0.8390804597701149,
+          "wilson_low": 0.7083254761755626,
+          "wilson_high": 0.8314811619199476
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0016229956896551723,
+        "latency_p50_s": 3.4935775179910706,
+        "latency_p95_s": 6.313369943952418
+      },
+      "challenging": {
+        "n": 71,
+        "ex": {
+          "k": 50,
+          "n": 71,
+          "value": 0.704225352112676,
+          "ci_low": 0.5915492957746479,
+          "ci_high": 0.8028169014084507,
+          "wilson_low": 0.5898146180172532,
+          "wilson_high": 0.7976711479868337
+        },
+        "pass_at_n": {
+          "k": 50,
+          "n": 71,
+          "value": 0.704225352112676,
+          "ci_low": 0.5915492957746479,
+          "ci_high": 0.8028169014084507,
+          "wilson_low": 0.5898146180172532,
+          "wilson_high": 0.7976711479868337
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0013978845070422535,
+        "latency_p50_s": 3.9321531180175953,
+        "latency_p95_s": 6.476014996500453
+      }
+    },
+    "by_db": {
+      "california_schools": {
+        "n": 21,
+        "ex": {
+          "k": 10,
+          "n": 21,
+          "value": 0.47619047619047616,
+          "ci_low": 0.2857142857142857,
+          "ci_high": 0.6666666666666666,
+          "wilson_low": 0.2834400610153418,
+          "wilson_high": 0.6763046541715556
+        },
+        "pass_at_n": {
+          "k": 10,
+          "n": 21,
+          "value": 0.47619047619047616,
+          "ci_low": 0.2857142857142857,
+          "ci_high": 0.6666666666666666,
+          "wilson_low": 0.2834400610153418,
+          "wilson_high": 0.6763046541715556
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0017905595238095237,
+        "latency_p50_s": 4.175166136003099,
+        "latency_p95_s": 6.246178364002844
+      },
+      "card_games": {
+        "n": 37,
+        "ex": {
+          "k": 28,
+          "n": 37,
+          "value": 0.7567567567567568,
+          "ci_low": 0.6216216216216216,
+          "ci_high": 0.8918918918918919,
+          "wilson_low": 0.5988270787855736,
+          "wilson_high": 0.866386470108836
+        },
+        "pass_at_n": {
+          "k": 28,
+          "n": 37,
+          "value": 0.7567567567567568,
+          "ci_low": 0.6216216216216216,
+          "ci_high": 0.8918918918918919,
+          "wilson_low": 0.5988270787855736,
+          "wilson_high": 0.866386470108836
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0011605594594594594,
+        "latency_p50_s": 2.8416139190085232,
+        "latency_p95_s": 5.359127872216049
+      },
+      "codebase_community": {
+        "n": 34,
+        "ex": {
+          "k": 26,
+          "n": 34,
+          "value": 0.7647058823529411,
+          "ci_low": 0.6176470588235294,
+          "ci_high": 0.9117647058823529,
+          "wilson_low": 0.6000386207746361,
+          "wilson_high": 0.8756301446736042
+        },
+        "pass_at_n": {
+          "k": 26,
+          "n": 34,
+          "value": 0.7647058823529411,
+          "ci_low": 0.6176470588235294,
+          "ci_high": 0.9117647058823529,
+          "wilson_low": 0.6000386207746361,
+          "wilson_high": 0.8756301446736042
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0018402294117647062,
+        "latency_p50_s": 3.550689121999312,
+        "latency_p95_s": 7.597642453758448
+      },
+      "debit_card_specializing": {
+        "n": 21,
+        "ex": {
+          "k": 18,
+          "n": 21,
+          "value": 0.8571428571428571,
+          "ci_low": 0.7142857142857143,
+          "ci_high": 1.0,
+          "wilson_low": 0.6536393971937906,
+          "wilson_high": 0.9501898750027473
+        },
+        "pass_at_n": {
+          "k": 18,
+          "n": 21,
+          "value": 0.8571428571428571,
+          "ci_low": 0.7142857142857143,
+          "ci_high": 1.0,
+          "wilson_low": 0.6536393971937906,
+          "wilson_high": 0.9501898750027473
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0013669047619047619,
+        "latency_p50_s": 3.3321492660033982,
+        "latency_p95_s": 11.441400141018676
+      },
+      "european_football_2": {
+        "n": 36,
+        "ex": {
+          "k": 34,
+          "n": 36,
+          "value": 0.9444444444444444,
+          "ci_low": 0.8611111111111112,
+          "ci_high": 1.0,
+          "wilson_low": 0.8185534279135275,
+          "wilson_high": 0.9846300133358382
+        },
+        "pass_at_n": {
+          "k": 34,
+          "n": 36,
+          "value": 0.9444444444444444,
+          "ci_low": 0.8611111111111112,
+          "ci_high": 1.0,
+          "wilson_low": 0.8185534279135275,
+          "wilson_high": 0.9846300133358382
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.001761138888888889,
+        "latency_p50_s": 3.189229534516926,
+        "latency_p95_s": 5.895546375242702
+      },
+      "financial": {
+        "n": 21,
+        "ex": {
+          "k": 18,
+          "n": 21,
+          "value": 0.8571428571428571,
+          "ci_low": 0.7142857142857143,
+          "ci_high": 1.0,
+          "wilson_low": 0.6536393971937906,
+          "wilson_high": 0.9501898750027473
+        },
+        "pass_at_n": {
+          "k": 18,
+          "n": 21,
+          "value": 0.8571428571428571,
+          "ci_low": 0.7142857142857143,
+          "ci_high": 1.0,
+          "wilson_low": 0.6536393971937906,
+          "wilson_high": 0.9501898750027473
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0015076071428571428,
+        "latency_p50_s": 4.389135920006083,
+        "latency_p95_s": 6.572890709998319
+      },
+      "formula_1": {
+        "n": 46,
+        "ex": {
+          "k": 36,
+          "n": 46,
+          "value": 0.782608695652174,
+          "ci_low": 0.6521739130434783,
+          "ci_high": 0.8913043478260869,
+          "wilson_low": 0.6442631262842106,
+          "wilson_high": 0.8773909467543745
+        },
+        "pass_at_n": {
+          "k": 36,
+          "n": 46,
+          "value": 0.782608695652174,
+          "ci_low": 0.6521739130434783,
+          "ci_high": 0.8913043478260869,
+          "wilson_low": 0.6442631262842106,
+          "wilson_high": 0.8773909467543745
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0013960543478260868,
+        "latency_p50_s": 3.7003616705042077,
+        "latency_p95_s": 6.232042480514792
+      },
+      "student_club": {
+        "n": 34,
+        "ex": {
+          "k": 32,
+          "n": 34,
+          "value": 0.9411764705882353,
+          "ci_low": 0.8529411764705882,
+          "ci_high": 1.0,
+          "wilson_low": 0.8090639309571901,
+          "wilson_high": 0.9837173447898773
+        },
+        "pass_at_n": {
+          "k": 32,
+          "n": 34,
+          "value": 0.9411764705882353,
+          "ci_low": 0.8529411764705882,
+          "ci_high": 1.0,
+          "wilson_low": 0.8090639309571901,
+          "wilson_high": 0.9837173447898773
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0013110294117647057,
+        "latency_p50_s": 3.3846216075035045,
+        "latency_p95_s": 4.657501178319216
+      },
+      "superhero": {
+        "n": 36,
+        "ex": {
+          "k": 29,
+          "n": 36,
+          "value": 0.8055555555555556,
+          "ci_low": 0.6666666666666666,
+          "ci_high": 0.9166666666666666,
+          "wilson_low": 0.6497195700482262,
+          "wilson_high": 0.9024690458107126
+        },
+        "pass_at_n": {
+          "k": 29,
+          "n": 36,
+          "value": 0.8055555555555556,
+          "ci_low": 0.6666666666666666,
+          "ci_high": 0.9166666666666666,
+          "wilson_low": 0.6497195700482262,
+          "wilson_high": 0.9024690458107126
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.001060361111111111,
+        "latency_p50_s": 3.152896283994778,
+        "latency_p95_s": 6.978223635771428
+      },
+      "thrombosis_prediction": {
+        "n": 35,
+        "ex": {
+          "k": 19,
+          "n": 35,
+          "value": 0.5428571428571428,
+          "ci_low": 0.37142857142857144,
+          "ci_high": 0.7142857142857143,
+          "wilson_low": 0.38189725068483754,
+          "wilson_high": 0.6953398071159278
+        },
+        "pass_at_n": {
+          "k": 19,
+          "n": 35,
+          "value": 0.5428571428571428,
+          "ci_low": 0.37142857142857144,
+          "ci_high": 0.7142857142857143,
+          "wilson_low": 0.38189725068483754,
+          "wilson_high": 0.6953398071159278
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.002032105714285714,
+        "latency_p50_s": 3.74455974198645,
+        "latency_p95_s": 8.172954471906996
+      },
+      "toxicology": {
+        "n": 28,
+        "ex": {
+          "k": 20,
+          "n": 28,
+          "value": 0.7142857142857143,
+          "ci_low": 0.5357142857142857,
+          "ci_high": 0.8571428571428571,
+          "wilson_low": 0.5294071156670429,
+          "wilson_high": 0.847460039433309
+        },
+        "pass_at_n": {
+          "k": 20,
+          "n": 28,
+          "value": 0.7142857142857143,
+          "ci_low": 0.5357142857142857,
+          "ci_high": 0.8571428571428571,
+          "wilson_low": 0.5294071156670429,
+          "wilson_high": 0.847460039433309
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0011603,
+        "latency_p50_s": 3.676026051994995,
+        "latency_p95_s": 6.9229413295193805
+      }
+    },
+    "by_bucket": {},
+    "linking": null,
+    "grammar_coverage": {
+      "overall": {
+        "k": 345,
+        "n": 349,
+        "value": 0.9885386819484241,
+        "ci_low": 0.9770773638968482,
+        "ci_high": 0.997134670487106,
+        "wilson_low": 0.9709055794492146,
+        "wilson_high": 0.9955341386602389
+      },
+      "by_db": {
+        "california_schools": {
+          "k": 19,
+          "n": 21,
+          "value": 0.9047619047619048,
+          "ci_low": 0.7619047619047619,
+          "ci_high": 1.0,
+          "wilson_low": 0.7108586092608176,
+          "wilson_high": 0.9734812325619255
+        },
+        "card_games": {
+          "k": 37,
+          "n": 37,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.9059421741627975,
+          "wilson_high": 1.0
+        },
+        "codebase_community": {
+          "k": 34,
+          "n": 34,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.8984854458466762,
+          "wilson_high": 1.0
+        },
+        "debit_card_specializing": {
+          "k": 21,
+          "n": 21,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.8453609810751531,
+          "wilson_high": 1.0
+        },
+        "european_football_2": {
+          "k": 35,
+          "n": 36,
+          "value": 0.9722222222222222,
+          "ci_low": 0.9166666666666666,
+          "ci_high": 1.0,
+          "wilson_low": 0.8583028134672612,
+          "wilson_high": 0.9950795928601894
+        },
+        "financial": {
+          "k": 21,
+          "n": 21,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.8453609810751531,
+          "wilson_high": 1.0
+        },
+        "formula_1": {
+          "k": 46,
+          "n": 46,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.9229264369144196,
+          "wilson_high": 1.0
+        },
+        "student_club": {
+          "k": 34,
+          "n": 34,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.8984854458466762,
+          "wilson_high": 1.0
+        },
+        "superhero": {
+          "k": 36,
+          "n": 36,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.9035813714055363,
+          "wilson_high": 1.0
+        },
+        "thrombosis_prediction": {
+          "k": 34,
+          "n": 35,
+          "value": 0.9714285714285714,
+          "ci_low": 0.9142857142857143,
+          "ci_high": 1.0,
+          "wilson_low": 0.8546691276638634,
+          "wilson_high": 0.9949385081445559
+        },
+        "toxicology": {
+          "k": 28,
+          "n": 28,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.8793566952341545,
+          "wilson_high": 1.0
+        }
+      },
+      "failures": [
+        {
+          "db_id": "california_schools",
+          "question_id": "17",
+          "parsed": false,
+          "error": null
+        },
+        {
+          "db_id": "california_schools",
+          "question_id": "41",
+          "parsed": false,
+          "error": null
+        },
+        {
+          "db_id": "european_football_2",
+          "question_id": "1116",
+          "parsed": false,
+          "error": null
+        },
+        {
+          "db_id": "thrombosis_prediction",
+          "question_id": "1225",
+          "parsed": false,
+          "error": null
+        }
+      ]
+    },
+    "grammar_rejections": {
+      "calls": 354,
+      "rejections": 2,
+      "rate": 0.005649717514124294
+    },
+    "safety": {
+      "events_by_layer": {
+        "grammar": 0,
+        "validator": 1,
+        "executor": 0,
+        "scoping": 0
+      },
+      "questions_stopped_by_layer": {
+        "grammar": 0,
+        "validator": 1,
+        "executor": 0,
+        "scoping": 0
+      },
+      "adversarial_questions": 0,
+      "database_violations": 0
+    },
+    "abstention": null,
+    "rves": null,
+    "cost_total_usd": 0.5174546,
+    "failures": 79,
+    "failure_labels": {
+      "date_handling": 5,
+      "extra_or_missing_output_columns": 5,
+      "no_sql_produced": 2,
+      "wrong_aggregation_or_grouping": 18,
+      "wrong_filter_value": 31,
+      "wrong_join_path": 4,
+      "wrong_table_or_column": 14
+    },
+    "gold_suspect_failures": 0
+  }
+}

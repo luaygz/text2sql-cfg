@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "text2sql-cfg: grammar-constrained text-to-SQL on the OpenAI Responses API"
+type: software
+authors:
+  - family-names: Gharzeddine
+    given-names: Luay
+license: MIT
+repository-code: "https://github.com/luaygz/text2sql-cfg"
+date-released: 2026-10-16
+version: 0.1.0
+keywords:
+  - text-to-sql
+  - constrained decoding
+  - context-free grammar
+  - BIRD
+  - LLM safety

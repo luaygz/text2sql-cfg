@@ -1,0 +1,21 @@
+name: generate_query_plan
+version: "1.0"
+description: >-
+  Method text (developer message 2) of the query_plan strategy: CHASE-SQL's query-plan chain of
+  thought (reason in the order a database engine executes the query), adapted from the paper's
+  demonstration and the CHESS repository's template_generate_candidate_two.txt
+  (docs/research/prompts-from-papers.md, Part 2 section 1b). The demonstrations and the
+  <FINAL_ANSWER> output format are dropped; the SQL comes back through the sql_query tool.
+changelog:
+  - version: "1.0"
+    date: 2026-10-16
+    note: First version.
+sections:
+  method: |
+    Use query-plan guided generation: plan the query the way a database engine would execute it, then write the SQL that carries out the plan.
+    1. Prepare. Identify the tables that hold what the question asks for and what it filters on, and the exact values to look for, taken from the question, the evidence and the matched values.
+    2. Scan and filter. For each table, decide which rows to keep and which column conditions decide it.
+    3. Match. Decide how rows of different tables are matched (the join keys, from the foreign keys) and in which order the tables are read.
+    4. Aggregate and order. Decide the counting, summing, grouping, sorting or top-row selection the question needs.
+    5. Deliver. Decide the exact columns to return, in the order the question asks for them.
+    Then write the final query from the plan and simplify it without changing its result.

@@ -1,0 +1,70 @@
+name: Smoke eval
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Replays from the committed response cache; there is no API key, and a miss fails the job.
+  OFFLINE: "true"
+  T2SQL_PHASE: ci
+
+jobs:
+  smoke-eval:
+    name: offline replay of the committed smoke run
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+
+      - name: Cache key from the pinned BIRD checksums
+        id: bird-key
+        run: |
+          digest=$(uv run --frozen python -c 'import hashlib
+          from text2sql.data.download import BIRD_FILES, BIRD_TREES
+          pins = [f"{s.sha256} {s.dest}" for s in BIRD_FILES]
+          pins += [f"{t.archive.sha256} {t.inner_zip} {t.prefix} {t.target}" for t in BIRD_TREES]
+          print(hashlib.sha256("\n".join(pins).encode()).hexdigest()[:24])')
+          echo "key=bird-${digest}" >> "$GITHUB_OUTPUT"
+      - name: Restore BIRD data
+        id: bird-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: data/bird
+          key: ${{ steps.bird-key.outputs.key }}
+      # On a cache hit the downloader only re-verifies the small files and finds the extraction
+      # markers, so nothing is fetched. On a miss it downloads ~1.15 GB and checks every sha256.
+      - name: Download BIRD (checksummed) and generate the SaaS database
+        run: make data
+      - name: Drop the archives; the extracted trees and their markers are all later steps need
+        run: rm -rf data/bird/downloads
+      - name: Save BIRD data
+        if: steps.bird-cache.outputs.cache-hit != 'true' && github.event_name == 'push'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: data/bird
+          key: ${{ steps.bird-key.outputs.key }}
+
+      # The smoke run uses the baseline preset, which reads no value or few-shot index; a smoke
+      # report from a preset with retrieval would also need `make index` here.
+      - name: Build catalogs (column descriptions replay from the cache)
+        run: make catalog
+      - name: BIRD-gated tests
+        run: uv run --frozen pytest -m "bird and not live"
+      # Replays the committed 30-question smoke report (SMOKE_REPORT in the Makefile) offline and
+      # fails on any per-question or summary mismatch, a cache miss, or a stale RESULTS.md. The
+      # full replay of every report is `make eval-offline`, whose run time grows with each report.
+      - name: Replay the committed smoke run
+        run: make smoke-offline

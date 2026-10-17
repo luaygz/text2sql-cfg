@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>text2sql-cfg demo</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  --bg: #fafaf8; --fg: #1d1d1b; --muted: #5c5c57; --panel: #ffffff; --line: #d9d8d2;
+  --accent: #1f5fa8; --ok: #1e6b36; --ok-bg: #e3f2e6; --bad: #a3231a; --bad-bg: #fbe5e2;
+  --warn: #7a5300; --warn-bg: #fdf1d6; --code: #f2f1ec;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --fg: #e9e8e3; --muted: #a9a8a1; --panel: #1f1f1d; --line: #3a3a36;
+    --accent: #7fb2ef; --ok: #8fd6a2; --ok-bg: #173521; --bad: #f2a097; --bad-bg: #42190f;
+    --warn: #f0cd7c; --warn-bg: #3b2c0b; --code: #262624;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+header, main, footer { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+header { padding-top: 20px; }
+h1 { font-size: 1.5rem; margin: 0 0 4px; }
+h2 { font-size: 1.1rem; margin: 0 0 10px; }
+h3 { font-size: 0.95rem; margin: 18px 0 6px; }
+p { margin: 6px 0; }
+.lede, .note, footer { color: var(--muted); }
+.note { font-size: 0.9rem; }
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px 16px; margin: 14px 0;
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px 16px; }
+label { display: block; font-weight: 600; font-size: 0.9rem; margin: 8px 0 3px; }
+select, textarea, input, button { font: inherit; color: inherit; }
+select, textarea {
+  width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg);
+}
+textarea { resize: vertical; }
+textarea.sql { font-family: var(--mono); font-size: 0.85rem; }
+fieldset { border: 1px solid var(--line); border-radius: 8px; margin: 12px 0 4px; padding: 8px 12px 10px; }
+legend { font-weight: 600; padding: 0 4px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+button {
+  padding: 7px 14px; border-radius: 6px; border: 1px solid var(--accent); cursor: pointer;
+  background: var(--accent); color: var(--panel); font-weight: 600;
+}
+button.secondary { background: transparent; color: var(--accent); }
+button.danger { background: var(--bad); border-color: var(--bad); color: var(--panel); }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.badge {
+  display: inline-block; padding: 0 7px; border-radius: 10px; font-size: 0.8rem;
+  font-weight: 600; border: 1px solid currentColor; white-space: nowrap;
+}
+.ok { color: var(--ok); background: var(--ok-bg); }
+.bad { color: var(--bad); background: var(--bad-bg); }
+.warn { color: var(--warn); background: var(--warn-bg); }
+.muted { color: var(--muted); }
+pre, code { font-family: var(--mono); font-size: 0.84rem; }
+pre {
+  background: var(--code); border-radius: 6px; padding: 8px 10px; margin: 6px 0;
+  white-space: pre-wrap; word-break: break-word; max-height: 28rem; overflow: auto;
+}
+pre.grammar { white-space: pre; max-height: 36rem; }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { border-bottom: 1px solid var(--line); padding: 5px 6px; text-align: left; vertical-align: top; }
+th { font-weight: 600; color: var(--muted); }
+td pre { margin: 0; max-height: 12rem; }
+.scroll { overflow-x: auto; }
+#stages { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+#stages li { border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; font-size: 0.88rem; }
+#stages li.running { border-color: var(--accent); }
+.cluster { display: grid; grid-template-columns: minmax(0, 1fr) 160px; gap: 4px 12px; align-items: center; margin: 4px 0; }
+meter { width: 100%; height: 14px; }
+.chosen { font-weight: 700; }
+.error-box { border-left: 4px solid var(--bad); padding: 6px 10px; background: var(--bad-bg); color: var(--bad); }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 2px 14px; margin: 6px 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+summary { cursor: pointer; font-weight: 600; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Grammar-constrained text-to-SQL</h1>
+  <p class="lede">Each candidate query below was decoded under a context-free grammar built from
+  the database schema, so the model can only write a read-only <code>SELECT</code> over tables and
+  columns it is allowed to see. The trace shows every stage live: the grammars, the candidates,
+  how their results cluster and vote, the selected SQL and its result. Every run calls the
+  OpenAI API and counts against this server's spend cap.</p>
+</header>
+<main>
+  <section class="panel" aria-labelledby="ask-heading">
+    <h2 id="ask-heading">Ask a question</h2>
+    <div class="grid">
+      <div>
+        <label for="db">Database</label>
+        <select id="db"></select>
+        <p id="db-mode" class="note"></p>
+      </div>
+      <div>
+        <label for="preset">Pipeline preset</label>
+        <select id="preset"></select>
+      </div>
+      <div>
+        <label for="example">Example question</label>
+        <select id="example"></select>
+      </div>
+    </div>
+
+    <fieldset id="login" hidden>
+      <legend>Simulated login</legend>
+      <p class="note">This is a multi-tenant database. Whose rows a query can read is decided by
+      the identity you sign in with here, which the server keeps in its own session and sends to
+      the browser only as an opaque HttpOnly cookie. Nothing you type in the question, and no
+      tenant id in the request body, can change it: the scoping layer adds the session's tenant
+      (and user) filter to every table the query touches.</p>
+      <div class="grid">
+        <div>
+          <label for="tenant">Tenant</label>
+          <select id="tenant"></select>
+        </div>
+        <div>
+          <label for="user">User</label>
+          <select id="user"></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" id="signin">Sign in</button>
+        <button type="button" id="signout" class="secondary">Sign out</button>
+        <span id="whoami" role="status"></span>
+      </div>
+    </fieldset>
+
+    <label for="question">Question</label>
+    <textarea id="question" rows="3" maxlength="2000"></textarea>
+    <div id="evidence-block">
+      <label for="evidence">Evidence <span class="muted">(BIRD's external-knowledge hint, optional)</span></label>
+      <textarea id="evidence" rows="2" maxlength="4000"></textarea>
+    </div>
+    <div class="actions">
+      <button type="button" id="ask">Ask</button>
+      <button type="button" id="attack" class="danger">Try an attack</button>
+      <span id="run-status" role="status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section id="attack-panel" class="panel" aria-labelledby="attack-heading" hidden>
+    <h2 id="attack-heading">Attack</h2>
+    <p>The attack question, now in the question box, tells the model to break out of its role.
+    Below is the query the attacker wants executed. The check runs it through the same grammar
+    the model decodes under, locally and at no cost; the trace below shows what the model was
+    able to write instead.</p>
+    <label for="attack-sql">Attacker's SQL (editable)</label>
+    <textarea id="attack-sql" class="sql" rows="2" maxlength="8000"></textarea>
+    <div class="actions">
+      <button type="button" id="check" class="secondary">Check against the grammar</button>
+      <span id="attack-verdict" role="status" aria-live="polite"></span>
+    </div>
+    <pre id="attack-error" hidden></pre>
+  </section>
+
+  <section class="panel" aria-labelledby="trace-heading">
+    <h2 id="trace-heading">Pipeline trace</h2>
+    <p id="run-info" class="note">No run yet.</p>
+    <ol id="stages" aria-label="Stages"></ol>
+    <div id="stage-notes"></div>
+
+    <h3>Grammars used</h3>
+    <div class="scroll">
+      <table id="grammars">
+        <thead><tr><th scope="col">View</th><th scope="col">Built from</th><th scope="col">Size</th>
+        <th scope="col">API budget load</th><th scope="col">Fingerprint</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3>Candidates</h3>
+    <div class="scroll">
+      <table id="candidates">
+        <thead><tr><th scope="col">#</th><th scope="col">Strategy</th><th scope="col">Model</th>
+        <th scope="col">Grammar</th><th scope="col">Execution</th><th scope="col">Rows</th>
+        <th scope="col">Repairs</th><th scope="col">Cost</th><th scope="col">SQL</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3>Clusters and vote</h3>
+    <div id="clusters"><p class="muted">Candidates that execute are grouped by their result rows; each group's size is its vote.</p></div>
+
+    <h3>Selection</h3>
+    <div id="selection"><p class="muted">Waiting for selection.</p></div>
+  </section>
+
+  <section class="panel" aria-labelledby="answer-heading">
+    <h2 id="answer-heading">Answer</h2>
+    <div id="answer"><p class="muted">No answer yet.</p></div>
+  </section>
+
+  <details id="grammar-viewer" class="panel">
+    <summary>Full-schema grammar for <span id="grammar-db">the selected database</span></summary>
+    <p class="note">The Lark grammar sent with every generation call as the tool's format. Table
+    and column names are spelled out as terminals, so a name that is not in the (visible) schema
+    cannot be decoded at all.</p>
+    <p id="grammar-stats"></p>
+    <pre id="grammar-def" class="grammar"></pre>
+  </details>
+
+  <details class="panel">
+    <summary>Raw event stream (NDJSON)</summary>
+    <pre id="raw"></pre>
+  </details>
+</main>
+<footer>
+  <p>Served from this machine only (127.0.0.1) unless started with an explicit <code>--host</code>.
+  One question runs at a time, with a cap on runs per minute. Database values and model output
+  are shown as text and never interpreted as markup.</p>
+</footer>
+<script>
+"use strict";
+
+const STAGE_LABELS = {
+  resources: "Load database", analysis: "Question analysis", values: "Value retrieval",
+  linking: "Schema linking", fewshots: "Few-shot retrieval", grammars: "Grammars",
+  cheap_path: "Cheap path", candidates: "Candidates", selection: "Selection",
+  explain: "Explanation", answer: "Answer",
+};
+const GOOD_STATUS = new Set(["ok", "empty"]);
+
+const state = {
+  databases: new Map(), presets: [], tenants: [], identity: null, running: false,
+  grammars: new Map(), stages: new Map(), candidates: new Map(), clusters: [],
+  selection: null, costs: null,
+};
+
+const $ = (id) => document.getElementById(id);
+
+function el(tag, props = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(props)) {
+    if (value === undefined || value === null) continue;
+    if (key === "class") node.className = value;
+    else if (key === "text") node.textContent = value;
+    else node.setAttribute(key, value);
+  }
+  for (const child of children) {
+    if (child === null || child === undefined) continue;
+    node.append(child instanceof Node ? child : document.createTextNode(String(child)));
+  }
+  return node;
+}
+
+function option(value, text) {
+  return el("option", { value: String(value) }, text);
+}
+
+const fmtSeconds = (s) => (s < 1 ? `${Math.round(s * 1000)} ms` : `${s.toFixed(2)} s`);
+const fmtUsd = (x) => `$${Number(x).toFixed(4)}`;
+const fmtPct = (x) => `${Math.round(Number(x) * 100)}%`;
+
+async function api(path, init = {}) {
+  const response = await fetch(path, {
+    ...init,
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json", ...(init.headers || {}) },
+  });
+  if (!response.ok) {
+    let detail = `${response.status} ${response.statusText}`;
+    try {
+      const body = await response.json();
+      if (body && body.detail) detail = typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail);
+    } catch (_) { /* non-JSON error body: keep the status line */ }
+    throw new Error(detail);
+  }
+  return response;
+}
+
+function currentDb() {
+  return state.databases.get($("db").value);
+}
+
+function setStatus(text, kind) {
+  const node = $("run-status");
+  node.textContent = text;
+  node.className = kind ? `badge ${kind}` : "";
+}
+
+/* ---------- setup: databases, presets, login ---------- */
+
+async function init() {
+  const data = await (await api("/api/databases")).json();
+  state.presets = data.presets;
+  for (const db of data.databases) state.databases.set(db.db_id, db);
+  const dbSelect = $("db");
+  for (const db of data.databases) {
+    const kind = db.dataset === "saas" ? "SaaS CRM, tenant mode" : "BIRD Mini-Dev, benchmark mode";
+    dbSelect.append(option(db.db_id, `${db.db_id} (${kind})`));
+  }
+  for (const name of data.presets) $("preset").append(option(name, name));
+  $("preset").value = data.default_preset;
+  if (data.databases.length === 0) {
+    setStatus("No databases found: build the catalogs first (make data && make catalog).", "bad");
+    $("ask").disabled = true;
+    $("attack").disabled = true;
+    return;
+  }
+  state.tenants = await (await api("/api/tenants")).json();
+  for (const t of state.tenants) $("tenant").append(option(t.tenant_id, `${t.tenant_id}: ${t.name}`));
+  fillUsers();
+  const session = await (await api("/api/session")).json();
+  showIdentity(session.identity);
+  onDatabaseChange();
+}
+
+function fillUsers() {
+  const users = $("user");
+  users.replaceChildren(option("", "Whole tenant (no per-user filter)"));
+  const tenant = state.tenants.find((t) => String(t.tenant_id) === $("tenant").value);
+  for (const u of tenant ? tenant.users : []) users.append(option(u.user_id, `${u.name} (${u.role}, user ${u.user_id})`));
+}
+
+function showIdentity(identity) {
+  state.identity = identity;
+  const node = $("whoami");
+  if (!identity) {
+    node.textContent = "Not signed in.";
+    node.className = "badge warn";
+    return;
+  }
+  const who = identity.user_id === null ? "whole tenant" : `user ${identity.user_id} (${identity.user_name})`;
+  node.textContent = `Signed in as ${identity.tenant_name} (tenant ${identity.tenant_id}), ${who}.`;
+  node.className = "badge ok";
+  $("tenant").value = String(identity.tenant_id);
+  fillUsers();
+  $("user").value = identity.user_id === null ? "" : String(identity.user_id);
+}
+
+async function signIn() {
+  const userValue = $("user").value;
+  const body = { tenant_id: Number($("tenant").value), user_id: userValue === "" ? null : Number(userValue) };
+  try {
+    const data = await (await api("/api/session", { method: "POST", body: JSON.stringify(body) })).json();
+    showIdentity(data.identity);
+  } catch (err) {
+    $("whoami").textContent = `Sign-in failed: ${err.message}`;
+    $("whoami").className = "badge bad";
+  }
+}
+
+async function signOut() {
+  await api("/api/session", { method: "DELETE" });
+  showIdentity(null);
+}
+
+function onDatabaseChange() {
+  const db = currentDb();
+  if (!db) return;
+  $("db-mode").textContent = db.requires_login
+    ? `${db.tables} tables. Tenant mode: LIMIT required, tenant columns hidden, rows scoped to the signed-in tenant.`
+    : `${db.tables} tables. Benchmark mode: full schema, no tenant scoping.`;
+  $("login").hidden = !db.requires_login;
+  $("evidence-block").hidden = db.dataset !== "bird";
+  const examples = $("example");
+  examples.replaceChildren(option("", "Choose an example..."));
+  db.examples.forEach((ex, i) => examples.append(option(i, ex.label)));
+  $("attack-panel").hidden = true;
+  $("grammar-db").textContent = db.db_id;
+  if ($("grammar-viewer").open) loadGrammar();
+}
+
+function onExampleChange() {
+  const db = currentDb();
+  const ex = db && db.examples[Number($("example").value)];
+  if (!ex) return;
+  $("question").value = ex.question;
+  $("evidence").value = ex.evidence || "";
+}
+
+/* ---------- grammar viewer and attack check ---------- */
+
+async function loadGrammar() {
+  const db = currentDb();
+  if (!db) return;
+  let grammar = state.grammars.get(db.db_id);
+  if (!grammar) {
+    $("grammar-stats").textContent = "Loading...";
+    try {
+      grammar = await (await api(`/api/grammar/${encodeURIComponent(db.db_id)}`)).json();
+    } catch (err) {
+      $("grammar-stats").textContent = `Could not load the grammar: ${err.message}`;
+      return;
+    }
+    state.grammars.set(db.db_id, grammar);
+  }
+  if (currentDb() !== db) return;
+  $("grammar-stats").textContent =
+    `${grammar.chars.toLocaleString()} characters, ${grammar.rules} rules, ${grammar.mode} mode; ` +
+    `estimated ${fmtPct(grammar.api_load)} of the API's grammar budget ` +
+    `(${grammar.fits_api_budget ? "fits" : "too large, the pipeline falls back to a linked-schema grammar"}); ` +
+    `sha256 ${grammar.fingerprint.slice(0, 12)}`;
+  $("grammar-def").textContent = grammar.definition;
+}
+
+async function checkAttackSql() {
+  const db = currentDb();
+  const verdict = $("attack-verdict");
+  const errorBox = $("attack-error");
+  errorBox.hidden = true;
+  verdict.textContent = "Checking...";
+  verdict.className = "";
+  try {
+    const body = JSON.stringify({ text: $("attack-sql").value });
+    const result = await (await api(`/api/grammar/${encodeURIComponent(db.db_id)}/check`, { method: "POST", body })).json();
+    if (result.accepted) {
+      verdict.textContent = `The grammar accepts this text (${result.kind}).`;
+      verdict.className = "badge warn";
+    } else {
+      verdict.textContent = "Rejected by the grammar: the model cannot produce this text.";
+      verdict.className = "badge ok";
+      errorBox.textContent = result.error;
+      errorBox.hidden = false;
+    }
+  } catch (err) {
+    verdict.textContent = `Check failed: ${err.message}`;
+    verdict.className = "badge bad";
+  }
+}
+
+function startAttack() {
+  const db = currentDb();
+  if (!db) return;
+  $("question").value = db.attack.question;
+  $("evidence").value = "";
+  $("example").value = "";
+  $("attack-sql").value = db.attack_sql;
+  $("attack-panel").hidden = false;
+  checkAttackSql();
+  ask();
+}
+
+/* ---------- trace rendering ---------- */
+
+function resetTrace() {
+  state.stages.clear();
+  state.candidates.clear();
+  state.clusters = [];
+  state.selection = null;
+  state.costs = null;
+  $("stages").replaceChildren();
+  $("stage-notes").replaceChildren();
+  $("grammars").tBodies[0].replaceChildren();
+  $("candidates").tBodies[0].replaceChildren();
+  $("clusters").replaceChildren(el("p", { class: "muted" }, "Waiting for candidates."));
+  $("selection").replaceChildren(el("p", { class: "muted" }, "Waiting for selection."));
+  $("answer").replaceChildren(el("p", { class: "muted" }, "Running..."));
+  $("raw").textContent = "";
+}
+
+function updateStage(stage, status, elapsed, data) {
+  let entry = state.stages.get(stage);
+  if (!entry) {
+    entry = { node: el("li"), started: null, finished: null };
+    state.stages.set(stage, entry);
+    $("stages").append(entry.node);
+  }
+  if (status === "started") entry.started = elapsed;
+  else entry.finished = elapsed;
+  const label = STAGE_LABELS[stage] || stage;
+  if (entry.finished === null) {
+    entry.node.className = "running";
+    entry.node.textContent = `${label}: running`;
+  } else {
+    entry.node.className = "";
+    const took = entry.started === null ? "" : ` in ${fmtSeconds(entry.finished - entry.started)}`;
+    const cost = data.cost_usd > 0 ? `, ${fmtUsd(data.cost_usd)}` : "";
+    entry.node.textContent = `${label}: done${took}${cost}`;
+  }
+}
+
+function addNote(stage, text) {
+  $("stage-notes").append(el("p", { class: "note" }, `${STAGE_LABELS[stage] || stage}: ${text}`));
+}
+
+function renderGrammarRow(data) {
+  const load = data.api_load === undefined ? "" : `${fmtPct(data.api_load)}${data.fits_api_budget === false ? " (too large)" : ""}`;
+  $("grammars").tBodies[0].append(el("tr", {},
+    el("td", {}, data.view ?? ""),
+    el("td", {}, data.built_from ?? ""),
+    el("td", {}, data.chars === undefined ? "" : `${Number(data.chars).toLocaleString()} chars`),
+    el("td", {}, load),
+    el("td", {}, el("code", {}, String(data.fingerprint ?? "").slice(0, 12)))));
+}
+
+function candidateSql(c) {
+  if (c.sql) return el("pre", {}, c.sql);
+  if (c.abstain_reason) return el("pre", {}, `ABSTAIN: ${c.abstain_reason}`);
+  return el("span", { class: "muted" }, "no SQL");
+}
+
+function renderCandidates() {
+  const body = $("candidates").tBodies[0];
+  body.replaceChildren();
+  const chosen = state.selection ? state.selection.index : null;
+  for (const c of [...state.candidates.values()].sort((a, b) => a.index - b.index)) {
+    const good = GOOD_STATUS.has(c.status);
+    const execution = el("td", {}, el("span", { class: `badge ${good ? "ok" : c.status === "abstained" ? "warn" : "bad"}` }, c.status));
+    if (c.layer || c.rule) execution.append(el("div", { class: "note" }, `${c.layer ?? ""}${c.rule ? `: ${c.rule}` : ""}`));
+    if (c.error) execution.append(el("div", { class: "note" }, c.error));
+    const grammar = c.grammar_ok
+      ? el("span", { class: "badge ok" }, "valid")
+      : el("span", { class: "badge bad" }, "rejected");
+    const indexCell = el("td", { class: c.index === chosen ? "chosen" : null }, c.index === chosen ? `${c.index} (selected)` : String(c.index));
+    body.append(el("tr", {},
+      indexCell,
+      el("td", {}, c.strategy ?? "", c.schema_view ? el("div", { class: "note" }, `${c.schema_view} schema`) : null),
+      el("td", {}, c.model ?? "", c.effort ? el("div", { class: "note" }, `effort ${c.effort}`) : null),
+      el("td", {}, grammar),
+      execution,
+      el("td", {}, c.row_count ?? ""),
+      el("td", {}, c.repairs ?? 0),
+      el("td", {}, c.cost_usd === undefined ? "" : fmtUsd(c.cost_usd)),
+      el("td", {}, candidateSql(c))));
+  }
+}
+
+function renderClusters() {
+  const box = $("clusters");
+  box.replaceChildren();
+  if (state.clusters.length === 0) {
+    box.append(el("p", { class: "muted" }, "No candidate executed successfully, so there is nothing to vote on."));
+    return;
+  }
+  const total = state.clusters.reduce((n, c) => n + c.members.length, 0);
+  const chosen = state.selection ? state.selection.index : null;
+  state.clusters.forEach((cluster, i) => {
+    const wins = chosen !== null && cluster.members.includes(chosen);
+    const votes = cluster.members.length;
+    const text = `Result ${i + 1}: candidates ${cluster.members.join(", ")} (${votes} of ${total} votes)` + (wins ? ", selected" : "");
+    const id = `cluster-${i}`;
+    box.append(el("div", { class: "cluster" },
+      el("span", { id, class: wins ? "chosen" : null }, text),
+      el("meter", { min: "0", max: String(total), value: String(votes), "aria-labelledby": id })));
+  });
+}
+
+function renderSelection() {
+  const s = state.selection;
+  const box = $("selection");
+  box.replaceChildren();
+  if (!s) return;
+  const kv = el("dl", { class: "kv" },
+    el("dt", {}, "Method"), el("dd", {}, s.method),
+    el("dt", {}, "Chosen candidate"), el("dd", {}, s.index === null ? "none" : String(s.index)),
+    el("dt", {}, "Vote share"), el("dd", {}, s.vote_share === undefined ? "" : fmtPct(s.vote_share)),
+    el("dt", {}, "Distinct results"), el("dd", {}, s.n_clusters ?? ""));
+  box.append(kv);
+  const scores = Object.entries(s.scores || {});
+  if (scores.length > 0) {
+    box.append(el("p", {}, s.method === "vote" ? "Votes per candidate:" : "Selector scores per candidate (the judge's or unit tests' decision):"));
+    box.append(el("ul", {}, ...scores.map(([idx, score]) => el("li", {}, `candidate ${idx}: ${Number(score).toFixed(3)}`))));
+  }
+}
+
+function previewTable(preview) {
+  const head = el("tr", {}, ...preview.columns.map((c) => el("th", { scope: "col" }, c)));
+  const rows = preview.rows.map((row) => el("tr", {}, ...row.map((v) => el("td", {}, v === null ? "NULL" : String(v)))));
+  const shown = preview.rows.length;
+  const caption = el("caption", { class: "note" }, `${shown} of ${preview.row_count} row${preview.row_count === 1 ? "" : "s"} shown`);
+  return el("div", { class: "scroll" }, el("table", {}, caption, el("thead", {}, head), el("tbody", {}, ...rows)));
+}
+
+function renderAnswer(answer, wallSeconds) {
+  const box = $("answer");
+  box.replaceChildren();
+  const statusKind = answer.status === "answered" ? "ok" : answer.status === "failed" ? "bad" : "warn";
+  box.append(el("p", {}, el("span", { class: `badge ${statusKind}` }, answer.status),
+    answer.confidence === undefined ? null : ` confidence ${fmtPct(answer.confidence)}`));
+  if (answer.reason) box.append(el("p", {}, `Reason: ${answer.reason}`));
+  if (answer.sql) {
+    box.append(el("h3", {}, "Final SQL"), el("pre", {}, answer.sql));
+  }
+  if (answer.preview) {
+    box.append(el("h3", {}, "Result preview"), previewTable(answer.preview));
+  }
+  if (answer.explanation) box.append(el("h3", {}, "Explanation"), el("p", {}, answer.explanation));
+  if (answer.schema_elements && answer.schema_elements.length > 0) {
+    box.append(el("p", { class: "note" }, `Schema elements used: ${answer.schema_elements.join(", ")}`));
+  }
+  const costs = state.costs;
+  const parts = [];
+  if (costs) {
+    if (costs.cost_usd !== undefined) parts.push(`list-price cost ${fmtUsd(costs.cost_usd)}`);
+    if (costs.billed_usd !== undefined) parts.push(`billed ${fmtUsd(costs.billed_usd)} (cache hits are free)`);
+    if (costs.model_latency_s !== undefined) parts.push(`model time ${fmtSeconds(costs.model_latency_s)}`);
+  }
+  if (wallSeconds !== undefined) parts.push(`wall time ${fmtSeconds(wallSeconds)}`);
+  if (parts.length > 0) box.append(el("p", { class: "note" }, parts.join(" · ")));
+}
+
+function handleEvent(line) {
+  const { stage, status, elapsed_s: elapsed, data } = line;
+  if (status === "started" || status === "finished") updateStage(stage, status, elapsed, data);
+  if (stage === "selection" && status === "finished" && data.verdict) {
+    addNote(stage, `the pipeline decided to ${data.verdict === "clarify" ? "ask for clarification" : "abstain"}`);
+  }
+  if (stage === "grammars" && status === "info") renderGrammarRow(data);
+  else if (stage === "candidate") {
+    state.candidates.set(data.index, data);
+    renderCandidates();
+  } else if (stage === "selection" && status === "info" && Array.isArray(data.clusters)) {
+    state.clusters = data.clusters;
+    renderClusters();
+  } else if (stage === "selection" && status === "info" && data.method !== undefined) {
+    state.selection = data;
+    renderSelection();
+    renderClusters();
+    renderCandidates();
+  } else if (stage === "cheap_path" && status === "info") {
+    addNote(stage, data.taken ? `taken (${data.reason})` : `not taken (${data.reason})`);
+  } else if (stage === "answer" && status === "finished") {
+    state.costs = data;
+  } else if (status === "info") {
+    addNote(stage, JSON.stringify(data));
+  }
+}
+
+function handleLine(line) {
+  const raw = $("raw");
+  raw.textContent += `${JSON.stringify(line)}\n`;
+  if (line.type === "run") {
+    const who = line.identity
+      ? `, scoped to ${line.identity.tenant_name} (tenant ${line.identity.tenant_id}${line.identity.user_id === null ? "" : `, user ${line.identity.user_id}`}) from the session`
+      : "";
+    $("run-info").textContent = `Running on ${line.db_id} in ${line.mode} mode with preset ${line.preset}${who}.`;
+  } else if (line.type === "event") {
+    handleEvent(line);
+  } else if (line.type === "done") {
+    renderAnswer(line.answer, line.wall_s);
+    if (state.clusters.length === 0 && state.candidates.size > 0) renderClusters();
+    setStatus(`Finished: ${line.answer.status}`, line.answer.status === "answered" ? "ok" : "warn");
+  } else if (line.type === "error") {
+    $("answer").replaceChildren(el("p", { class: "error-box" }, `${line.error}: ${line.detail}`));
+    setStatus(`Stopped: ${line.error}`, "bad");
+  }
+}
+
+async function ask() {
+  if (state.running) return;
+  const db = currentDb();
+  const question = $("question").value.trim();
+  if (!db || question === "") {
+    setStatus("Type a question first.", "warn");
+    $("question").focus();
+    return;
+  }
+  const evidence = $("evidence").value.trim();
+  const body = {
+    question,
+    db_id: db.db_id,
+    preset: $("preset").value,
+    evidence: db.dataset === "bird" && evidence !== "" ? evidence : null,
+  };
+  state.running = true;
+  $("ask").disabled = true;
+  $("attack").disabled = true;
+  setStatus("Running...", "");
+  let response;
+  try {
+    response = await api("/api/ask", { method: "POST", body: JSON.stringify(body) });
+  } catch (err) {
+    setStatus(err.message, "bad");
+    finishRun();
+    return;
+  }
+  resetTrace();
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let ended = false;
+  try {
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let newline;
+      while ((newline = buffer.indexOf("\n")) >= 0) {
+        const text = buffer.slice(0, newline);
+        buffer = buffer.slice(newline + 1);
+        if (text.trim() === "") continue;
+        const line = JSON.parse(text);
+        handleLine(line);
+        if (line.type === "done" || line.type === "error") ended = true;
+      }
+    }
+    if (!ended) setStatus("The stream ended without a result; see the server log.", "bad");
+  } catch (err) {
+    setStatus(`Stream interrupted: ${err.message}`, "bad");
+  } finally {
+    finishRun();
+  }
+}
+
+function finishRun() {
+  state.running = false;
+  $("ask").disabled = false;
+  $("attack").disabled = false;
+}
+
+$("db").addEventListener("change", onDatabaseChange);
+$("example").addEventListener("change", onExampleChange);
+$("tenant").addEventListener("change", fillUsers);
+$("signin").addEventListener("click", signIn);
+$("signout").addEventListener("click", signOut);
+$("ask").addEventListener("click", ask);
+$("attack").addEventListener("click", startAttack);
+$("check").addEventListener("click", checkAttackSql);
+$("grammar-viewer").addEventListener("toggle", () => { if ($("grammar-viewer").open) loadGrammar(); });
+$("question").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask(); });
+init().catch((err) => setStatus(`Could not load the demo: ${err.message}`, "bad"));
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+# OpenAI API prices in USD per 1M tokens, Standard tier, short context (<= 272K input tokens).
+# Other tiers are expressed as multipliers on these rates. The cost code in
+# src/text2sql/llm/pricing.py reads only this file; update it here when prices change.
+source: https://developers.openai.com/api/docs/pricing.md
+verified: 2026-10-16
+
+# Inputs above this many tokens are billed at the long-context rates.
+long_context_threshold_tokens: 272000
+
+# Keyed by the `service_tier` value a response reports. The pricing page lists Flex and Batch at
+# exactly half of Standard for every model below, and Fast mode (reported as `priority`) at double.
+# `auto` is priced as standard: it resolves to the project default tier, which is Standard unless
+# changed in the project settings.
+tier_multipliers:
+  default: 1.0
+  auto: 1.0
+  flex: 0.5
+  batch: 0.5
+  priority: 2.0
+
+models:
+  gpt-6.1-sol:
+    input: 2.00
+    cached_input: 0.10
+    cache_write: 2.50
+    output: 10.00
+    long_context:
+      input: 4.00
+      cached_input: 0.20
+      cache_write: 5.00
+      output: 15.00
+  gpt-6-luna:
+    input: 0.10
+    cached_input: 0.01
+    cache_write: 0.125
+    output: 0.50
+    long_context:
+      input: 0.20
+      cached_input: 0.02
+      cache_write: 0.25
+      output: 0.75
+  # Embeddings bill input tokens only; no cached-input or cache-write rate is listed.
+  text-embedding-3-small:
+    input: 0.02

@@ -1,0 +1,42 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# large or regenerable data (fetched by `make data`)
+data/bird/
+data/spider/
+data/saas/*.sqlite
+data/saas/*.sqlite-*
+*.sqlite-journal
+data/indexes/
+
+# local working store of the response cache; git holds cache/llm/shards/ (`make cache-export`)
+cache/llm/responses.sqlite
+cache/llm/responses.sqlite-*
+cache/llm/shards/.*.partial
+
+# scratch
+runs/scratch/
+.DS_Store
+
+# regenerable derived artifacts (`make catalog`)
+data/catalog/
+runs/traces/
+runs/safety_events.jsonl
+
+# coverage data from parallel runs, scratch logs
+.coverage.*
+runs/*.log

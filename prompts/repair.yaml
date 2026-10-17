@@ -1,0 +1,58 @@
+name: repair
+version: "1.2"
+description: >-
+  Repair turn for a candidate's `sql_query` call (text2sql.generation.repair_candidate). The
+  candidate's conversation continues with the feedback (repair_feedback) as the custom tool call
+  output, then the `continue` section as a user message, then a new forced sql_query call. The
+  feedback is one problem section (error, validator, empty or value), then value_hints when there
+  are any, then fix, check or value_check. Wording follows DIN-SQL's "gentle" self-correction
+  finding: state what was observed, and when nothing failed (an empty result, a compared value the
+  database does not store) ask the model to check the query rather than asserting it is wrong.
+changelog:
+  - version: "1.0"
+    date: 2026-10-16
+    note: First version.
+  - version: "1.1"
+    date: 2026-10-16
+    note: >-
+      Adds the `continue` user message after the tool output. Without it gpt-6.1-sol never
+      answered the forced call: 4 of 4 live repair turns (one with the reasoning items replayed)
+      ended incomplete with reason max_messages after about 100 reasoning items (ADR-012).
+  - version: "1.2"
+    date: 2026-10-16
+    note: >-
+      Adds the `value` and `value_check` sections for the literal check (ADR-014): the query ran,
+      but a string it compares a column with is not stored in that column, and similar stored
+      values exist. Other sections are unchanged.
+sections:
+  error: |
+    Running the query failed. SQLite reported: $detail
+
+  validator: |
+    The query was rejected before it ran by the check every query must pass: $detail
+
+  empty: |
+    The query ran without errors and returned 0 rows.
+
+  empty_detail: |
+    $detail
+
+  value: |
+    The query ran without errors. It compares columns with values that do not occur in them:
+    $detail
+
+  value_hints: |
+    What the database holds for the values the query compares against:
+    $hints
+
+  fix: |
+    Find the cause and call `sql_query` again with a corrected query that answers the question.
+
+  check: |
+    An empty result can be the right answer. It can also mean that a compared value is spelled differently in the data, that a join uses the wrong column, or that a condition is stricter than the question asks. Check the query against the question, the evidence and the schema. If it is right, call `sql_query` with it unchanged; otherwise call it with the corrected query.
+
+  value_check: |
+    The evidence can spell a value differently from the data. If the question means one of the stored values listed, call `sql_query` with the query using that value exactly as stored. If the query is right as it is, call `sql_query` with it unchanged.
+
+  continue: |
+    Call `sql_query` again.

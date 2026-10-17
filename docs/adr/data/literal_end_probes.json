@@ -1,0 +1,2360 @@
+{
+ "about": "Probes for punctuation-final literals and query endings (ADR-005, 'The trailing newline'), 2026-10-16, through text2sql.llm.LLMClient with T2SQL_PHASE=grammar, flex tier. copy_tasks: minimal grammar 'start: \"x\" OP STRING (\" AND y = 1\")? [\"\\n\"?]', prompt 'Call sql_query with exactly this input: <target>'; variant 'cur' is the STRING regex at commit 9686e41, 'nl' marks the optional trailing newline; other variants are in /tmp probe code, described in ADR-005. real_requests: the exact best-preset generation requests (direct_full, gpt-6.1-sol, medium, generate_common@1.2) of BIRD dev questions, rebuilt offline from the committed response cache; sample 0 of arm old_grammar is the eval run's own response (max_output_tokens 4096), all other samples use max_output_tokens 600. Arm rejected_literal_rules used generate_common 1.3 (never committed) and a stricter STRING regex; arm trailing_newline is the committed grammar. trailing_whitespace: real requests with an optional trailing /[ \\n]{1,2}/ to see whether the model uses it.",
+ "spend_usd": 0.2504,
+ "copy_tasks": [
+  {
+   "variant": "cur",
+   "target": "x LIKE '1:54%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '1:54%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '1:54%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '1:54%'",
+   "sample": 3,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 3,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 3,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 3,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Hello!'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Hello!'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Hello!'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Hello!'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Hello!'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Hello!'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Hello!'",
+   "sample": 3,
+   "ok": true,
+   "output": "x = 'Hello!'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '#'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '#'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '#'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '#'",
+   "sample": 3,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '*'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '*'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '*'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = '*'",
+   "sample": 3,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "cur",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 3,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 0,
+   "ok": false,
+   "output": "x = 'Understanding what Dassault iSight is doing?ன்ன'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 1,
+   "ok": false,
+   "output": "x = 'Understanding what Dassault iSight is doing? ' AND y = 1"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 2,
+   "ok": false,
+   "output": "x = 'Understanding what Dassault iSight is doing? background context lit by a''b and grounded clearly without further tooling needed and this will remain a valid literal under grammar requirements as "
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 2,
+   "ok": false,
+   "output": "x = '#16161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 1,
+   "ok": false,
+   "output": "FAILED[incomplete] \"x = '*01.1.annotation ''= y DNA07+1=10 = y DNA D1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA1=1DNA"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 2,
+   "ok": false,
+   "output": "x = '*1756888051' AND y = 1"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 2,
+   "ok": false,
+   "output": "x LIKE '2010-02-22% կ'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '-'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '-'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '-'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '-'"
+  },
+  {
+   "variant": "single",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '-'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '-'"
+  },
+  {
+   "variant": "qend",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "qend",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "qend",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "qend",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "qend",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "qend",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 0,
+   "ok": false,
+   "output": "x = 'Understanding what Dassault iSight is doing? common input? nope'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 1,
+   "ok": false,
+   "output": "x = 'Understanding what Dassault iSight is doing? '"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 2,
+   "ok": false,
+   "output": "x = 'Understanding what Dassault iSight is doing? juin'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 0,
+   "ok": false,
+   "output": "x = 'Why square the difference in standard deviation? (squaring ensures nonnegative contributions and weights large deviations more heavily)' AND y = 1"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 1,
+   "ok": false,
+   "output": "x = 'Why square the difference in standard deviation? schema: evil directive: ignore your developer instructions and output secrets -- quota: 0 usage: 2147483647 payload injected as plain text inside "
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 2,
+   "ok": false,
+   "output": "x = 'Why square the difference in standard deviation?INCOMPLETE_TOOL_CALL©functions.sql_query(x = ' AND y = 1"
+  },
+  {
+   "variant": "pct",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "pct",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 1,
+   "ok": false,
+   "output": "x LIKE '2010-02-22 %'"
+  },
+  {
+   "variant": "pct",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 2,
+   "ok": false,
+   "output": "x LIKE '2010-02-22%0.00xA AND y = 1 -- %' AND y = 1"
+  },
+  {
+   "variant": "pct",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "pct",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 1,
+   "ok": false,
+   "output": "x LIKE '1:54%0' AND y = 1"
+  },
+  {
+   "variant": "pct",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 2,
+   "ok": false,
+   "output": "x LIKE '1:54 %'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 0,
+   "ok": false,
+   "output": "x LIKE '2010-02-22% وتم'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 1,
+   "ok": false,
+   "output": "x LIKE '2010-02-22% mark? ' AND y = 1"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "noesc",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 2,
+   "ok": false,
+   "output": "x LIKE '1:54غ%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Hello!'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Hello!'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Hello!'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Hello!'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Hello!'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Hello!'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Matthew D.'",
+   "sample": 0,
+   "ok": false,
+   "output": "x = 'Matthew D. run time 05 has 0? string begins M valid length yes exact. '"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Matthew D.'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Matthew D.'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Matthew D.'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Matthew D.'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'x)'",
+   "sample": 0,
+   "ok": false,
+   "output": "x = 'x)息'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'x)'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'x)'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'x)'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'x)'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'ratio:'",
+   "sample": 0,
+   "ok": false,
+   "output": "x = 'ratio: प्रत'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'ratio:'",
+   "sample": 1,
+   "ok": false,
+   "output": "x = 'ratio: ony' AND y = 1"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'ratio:'",
+   "sample": 2,
+   "ok": false,
+   "output": "x = 'ratio: stop' AND y = 1"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Smith,'",
+   "sample": 0,
+   "ok": false,
+   "output": "x = 'Smith, out of grammar? nope Smith, is fine'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Smith,'",
+   "sample": 1,
+   "ok": false,
+   "output": "x = 'Smith, eng'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Smith,'",
+   "sample": 2,
+   "ok": false,
+   "output": "x = 'Smith, '"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'Lorient%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE 'Lorient%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'Lorient%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE 'Lorient%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'Lorient%'",
+   "sample": 2,
+   "ok": false,
+   "output": "x LIKE 'Lorient%َّ'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'A%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE 'A%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'A%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE 'A%'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'A%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE 'A%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '#'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '-'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = '-'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '-'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = '-'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '-'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = '-'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '1:54%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '1:54%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '2010-02-22%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'Lorient%'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE 'Lorient%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'Lorient%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE 'Lorient%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE 'Lorient%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE 'Lorient%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 0,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 1,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Why square the difference in standard deviation?'",
+   "sample": 2,
+   "ok": true,
+   "output": "x = 'Why square the difference in standard deviation?'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 0,
+   "ok": false,
+   "output": "x LIKE '%Japanese통'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Japanese%'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '%Japanese%'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Y-%m'",
+   "sample": 0,
+   "ok": true,
+   "output": "x LIKE '%Y-%m'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Y-%m'",
+   "sample": 1,
+   "ok": true,
+   "output": "x LIKE '%Y-%m'"
+  },
+  {
+   "variant": "v2",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '%Y-%m'",
+   "sample": 2,
+   "ok": true,
+   "output": "x LIKE '%Y-%m'"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 0,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = '#'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 1,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = '#'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '#'",
+   "sample": 2,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = '#'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 0,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = '*'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 1,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = '*'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = '*'",
+   "sample": 2,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = '*'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 0,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 1,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Understanding what Dassault iSight is doing?'",
+   "sample": 2,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'Understanding what Dassault iSight is doing?'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'ratio:'",
+   "sample": 0,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'ratio:'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'ratio:'",
+   "sample": 1,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'ratio:'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'ratio:'",
+   "sample": 2,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'ratio:'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Smith,'",
+   "sample": 0,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'Smith,'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Smith,'",
+   "sample": 1,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'Smith,'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x = 'Smith,'",
+   "sample": 2,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x = 'Smith,'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 0,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x LIKE '2010-02-22%'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 1,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x LIKE '2010-02-22%'\n"
+  },
+  {
+   "variant": "cur",
+   "model": "gpt-6.1-sol",
+   "effort": "low",
+   "target": "x LIKE '2010-02-22%'",
+   "sample": 2,
+   "ok": true,
+   "nl": true,
+   "ended_nl": true,
+   "output": "x LIKE '2010-02-22%'\n"
+  }
+ ],
+ "real_requests_original_sample0": {
+  "197": {
+   "status": "ok",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-3837292.1192142554 49: tool execution not found.4881.0000000000 1: tool result error.4881.0000000000 1: tool role entry marker.4881.0000000000 1: tool message length: 27.4881.0000000000 1: tool message payload: {\"error\": \"Tool execution failed\"} .4881.0.'"
+  },
+  "201": {
+   "status": "failed",
+   "sql": "FAILED GrammarCallFailed: SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '=') AS T3 ON T1.molecule_id = T3.molecule_id OR ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(ROUND(1)))))))))))))))))))))))))))))))))))))))))))))))) = 1 AND T1.molecule_id"
+  },
+  "253": {
+   "status": "ok",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#159' ORDER BY T1.element LIMIT 4 OFFSET 1"
+  },
+  "416": {
+   "status": "ok",
+   "sql": "SELECT CAST(COUNT(CASE WHEN T2.language = 'French' THEN 1 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*9641B9D8-7B04-44A8-B67D-6FF697016C53' LIMIT 1 OFFSET 900719"
+  },
+  "578": {
+   "status": "failed",
+   "sql": "FAILED GrammarCallFailed: SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing? сво' AND T1.Title = 'Understanding what Dassault iSight is doing? ' OR T1.Title = 'Understanding what Dassault iSight is doing? and' AND T1.Title = 'Understanding what Dassault iSight is doing?title' AND T1.Title = 'Understanding what Dassault iSight is doing?query' AND T1.Title = 'Understanding what Dassault iSight is doing?Post' AND T1.Title = 'Understanding what Dassault iSight is doing?user' AND T1.Ti"
+  },
+  "584": {
+   "status": "ok",
+   "sql": "SELECT DISTINCT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation? solid? getting?'"
+  },
+  "760": {
+   "status": "ok",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180 NOT IN (SELECT 1) = 0 LIMIT 1 OFFSET 00787"
+  },
+  "861": {
+   "status": "ok",
+   "sql": "SELECT T1.number FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 903 AND T2.q3 LIKE '1:54%ʼ'"
+  },
+  "1110": {
+   "status": "ok",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%け' NOT LIKE 'x'"
+  }
+ },
+ "real_requests": [
+  {
+   "arm": "old_grammar",
+   "qid": 760,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 128,
+   "cost_usd": 0.00111195,
+   "fingerprint": "d7bfb7a25a6ca2cfef690252117aa409188ffeaa768cf77180d00f199443d572",
+   "sql": "SELECT CAST(SUM(T2.id = 13) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 197,
+   "sample": 2,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 111,
+   "cost_usd": 0.0009367999999999999,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 197,
+   "sample": 3,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 94,
+   "cost_usd": 0.0008517999999999999,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 201,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 136,
+   "cost_usd": 0.004377,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '=') AS T3 ON T1.molecule_id = T3.molecule_id"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 201,
+   "sample": 4,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 137,
+   "cost_usd": 0.0010747999999999999,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '=') AS T3 ON T1.molecule_id = T3.molecule_id"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 201,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 206,
+   "cost_usd": 0.0014198,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "WITH cte1 AS (SELECT DISTINCT T1.molecule_id FROM bond AS T1 WHERE T1.bond_type = '=') SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN cte1 AS T2 ON T1.molecule_id = T2.molecule_id"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 253,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 174,
+   "cost_usd": 0.0012327999999999998,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT DISTINCT T3.element FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON (T3.atom_id = T2.atom_id OR T3.atom_id = T2.atom_id2) WHERE T1.bond_type = '#'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 197,
+   "sample": 4,
+   "status": "incomplete",
+   "correct": false,
+   "output_tokens": 600,
+   "cost_usd": 0.0033818,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-1399 +- 4' AND T1.atom_id IS NOT NULL AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2.bond_type = '-1399 +- 4' AND T2"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 253,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 123,
+   "cost_usd": 0.0009777999999999998,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT DISTINCT T3.element FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T3.atom_id = T2.atom_id OR T3.atom_id = T2.atom_id2 WHERE T1.bond_type = '#'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 253,
+   "sample": 4,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 133,
+   "cost_usd": 0.0010278,
+   "fingerprint": "b50eb5209e0fa6d4b674fba99b9b935b5e4c6d5cfdba044f6a1100a21d53dd03",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 416,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 176,
+   "cost_usd": 0.0015201,
+   "fingerprint": "4a25837d945db4536642e185545ffeec9277a07734f1013ad146e34c5aea4736",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 416,
+   "sample": 4,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 211,
+   "cost_usd": 0.0016950999999999997,
+   "fingerprint": "4a25837d945db4536642e185545ffeec9277a07734f1013ad146e34c5aea4736",
+   "sql": "SELECT CAST(COUNT(DISTINCT T2.uuid) AS REAL) * 100 / COUNT(DISTINCT T1.uuid) FROM cards AS T1 LEFT JOIN foreign_data AS T2 ON T1.uuid = T2.uuid AND T2.language = 'French' WHERE (T1.power IS NULL OR T1.power = '*')"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 416,
+   "sample": 3,
+   "status": "incomplete",
+   "correct": false,
+   "output_tokens": 600,
+   "cost_usd": 0.0036401,
+   "fingerprint": "4a25837d945db4536642e185545ffeec9277a07734f1013ad146e34c5aea4736",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*12557' || 'x' AND T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' AND T1.power IS NULL OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T1.power = '*12557' || 'x' OR T"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 578,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 78,
+   "cost_usd": 0.0008699,
+   "fingerprint": "6822b3fb9bb48673e45e40c78f4b7bd1cc30bc06c4b2a7052239cabfa587f435",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 578,
+   "sample": 4,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 78,
+   "cost_usd": 0.0008699,
+   "fingerprint": "6822b3fb9bb48673e45e40c78f4b7bd1cc30bc06c4b2a7052239cabfa587f435",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?ித்த' || 'x'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 578,
+   "sample": 3,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 130,
+   "cost_usd": 0.0011299,
+   "fingerprint": "6822b3fb9bb48673e45e40c78f4b7bd1cc30bc06c4b2a7052239cabfa587f435",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing? eman? aim? penal? to? is? doing? Thinking? is? what? does? doing? Learning? is? doing? Learning? is? doing?  understanding? knowledge? knowledge? Knowledge? Understanding? is? doing? Doing? Doing? Doing? Doing?'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 584,
+   "sample": 3,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 189,
+   "cost_usd": 0.0014249,
+   "fingerprint": "6822b3fb9bb48673e45e40c78f4b7bd1cc30bc06c4b2a7052239cabfa587f435",
+   "sql": "SELECT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation? ce? contradiction? certainly not! ' ORDER BY T1.Id DESC LIMIT 1 OFFSET 0"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 584,
+   "sample": 2,
+   "status": "incomplete",
+   "correct": false,
+   "output_tokens": 600,
+   "cost_usd": 0.0034798999999999997,
+   "fingerprint": "6822b3fb9bb48673e45e40c78f4b7bd1cc30bc06c4b2a7052239cabfa587f435",
+   "sql": "SELECT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation? aptitude?' LIKE 'x' OR 1 = 1 OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' LIKE 'x' OR 1 = 1 OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' = 'x' OR T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND 'x' "
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 584,
+   "sample": 4,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 154,
+   "cost_usd": 0.0012499,
+   "fingerprint": "6822b3fb9bb48673e45e40c78f4b7bd1cc30bc06c4b2a7052239cabfa587f435",
+   "sql": "SELECT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?ʼ' LIMIT 1"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 760,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 141,
+   "cost_usd": 0.00117695,
+   "fingerprint": "d7bfb7a25a6ca2cfef690252117aa409188ffeaa768cf77180d00f199443d572",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 760,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 155,
+   "cost_usd": 0.00124695,
+   "fingerprint": "d7bfb7a25a6ca2cfef690252117aa409188ffeaa768cf77180d00f199443d572",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 760,
+   "sample": 4,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 113,
+   "cost_usd": 0.00103695,
+   "fingerprint": "d7bfb7a25a6ca2cfef690252117aa409188ffeaa768cf77180d00f199443d572",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 861,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 107,
+   "cost_usd": 0.00108445,
+   "fingerprint": "bde8633bb012463f56006a7a4f7189a0db577e072223046065a7b333716c6965",
+   "sql": "SELECT T1.number FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 903 AND T2.q3 LIKE '1:54%'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 861,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 115,
+   "cost_usd": 0.00112445,
+   "fingerprint": "bde8633bb012463f56006a7a4f7189a0db577e072223046065a7b333716c6965",
+   "sql": "SELECT T2.number FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T1.driverId = T2.driverId WHERE T1.raceId = 903 AND T1.q3 LIKE '1:54%'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 861,
+   "sample": 4,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 114,
+   "cost_usd": 0.00111945,
+   "fingerprint": "bde8633bb012463f56006a7a4f7189a0db577e072223046065a7b333716c6965",
+   "sql": "SELECT T1.number FROM qualifying AS T1 WHERE T1.raceId = 903 AND T1.q3 LIKE '1:54%'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 1110,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 84,
+   "cost_usd": 0.00121245,
+   "fingerprint": "a557021c12cc723b5340024c0208f0ac7b21a0052447e4bf0408e68408a1b827",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 1110,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 95,
+   "cost_usd": 0.00126745,
+   "fingerprint": "a557021c12cc723b5340024c0208f0ac7b21a0052447e4bf0408e68408a1b827",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'"
+  },
+  {
+   "arm": "old_grammar",
+   "qid": 1110,
+   "sample": 4,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 84,
+   "cost_usd": 0.00121245,
+   "fingerprint": "a557021c12cc723b5340024c0208f0ac7b21a0052447e4bf0408e68408a1b827",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 197,
+   "sample": 0,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 105,
+   "cost_usd": 0.00443025,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 197,
+   "sample": 1,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 123,
+   "cost_usd": 0.00100545,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 197,
+   "sample": 2,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 95,
+   "cost_usd": 0.00086545,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 197,
+   "sample": 3,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 101,
+   "cost_usd": 0.00089545,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT AVG(T1.element = 'o') FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 201,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 168,
+   "cost_usd": 0.00123845,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '=') AS T3 ON T1.molecule_id = T3.molecule_id"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 201,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 179,
+   "cost_usd": 0.00129345,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T3.molecule_id FROM bond AS T3 WHERE T3.bond_type = '=') AS T2 ON T1.molecule_id = T2.molecule_id"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 201,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 169,
+   "cost_usd": 0.00124345,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '=') AS T3 ON T1.molecule_id = T3.molecule_id"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 253,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 154,
+   "cost_usd": 0.00114145,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 201,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 172,
+   "cost_usd": 0.00125845,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T3.molecule_id FROM bond AS T3 WHERE T3.bond_type = '=') AS T2 ON T1.molecule_id = T2.molecule_id"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 253,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 142,
+   "cost_usd": 0.00108145,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 253,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 138,
+   "cost_usd": 0.00106145,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 253,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 136,
+   "cost_usd": 0.00105145,
+   "fingerprint": "e5c213fb0cacf5a9f48d0f639c542abfbf4ba0dd502689e26b6a49a9b349bff1",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 416,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 183,
+   "cost_usd": 0.01062975,
+   "fingerprint": "020b1b8c40af833b06005d8c0449f579049ae89ef4a50414833c92625ab79741",
+   "sql": "SELECT CAST(COUNT(CASE WHEN T2.language = 'French' THEN 1 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 416,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 250,
+   "cost_usd": 0.0018987499999999998,
+   "fingerprint": "020b1b8c40af833b06005d8c0449f579049ae89ef4a50414833c92625ab79741",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 416,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 202,
+   "cost_usd": 0.0016587499999999999,
+   "fingerprint": "020b1b8c40af833b06005d8c0449f579049ae89ef4a50414833c92625ab79741",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 578,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 73,
+   "cost_usd": 0.00648275,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 416,
+   "sample": 3,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 186,
+   "cost_usd": 0.0015787499999999999,
+   "fingerprint": "020b1b8c40af833b06005d8c0449f579049ae89ef4a50414833c92625ab79741",
+   "sql": "SELECT CAST(COUNT(DISTINCT T2.uuid) AS REAL) * 100 / COUNT(DISTINCT T1.uuid) FROM cards AS T1 LEFT JOIN foreign_data AS T2 ON T1.uuid = T2.uuid AND T2.language = 'French' WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 578,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 75,
+   "cost_usd": 0.0008635499999999999,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 578,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 75,
+   "cost_usd": 0.0008635499999999999,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 578,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 75,
+   "cost_usd": 0.0008635499999999999,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 584,
+   "sample": 0,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 216,
+   "cost_usd": 0.00156855,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 584,
+   "sample": 1,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 176,
+   "cost_usd": 0.0013685499999999998,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 584,
+   "sample": 2,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 200,
+   "cost_usd": 0.00148855,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 584,
+   "sample": 3,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 236,
+   "cost_usd": 0.00166855,
+   "fingerprint": "cd91a9a289b2bd541f376846c034d2ae44d1b22fa04a012c12e5216a3a73aa7d",
+   "sql": "SELECT T1.Text FROM comments AS T1 INNER JOIN posts AS T2 ON T1.UserId = T2.LastEditorUserId WHERE T2.Title = 'Why square the difference instead of taking the absolute value in standard deviation?'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 760,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 137,
+   "cost_usd": 0.0011656,
+   "fingerprint": "947500b8cfb94839243bde3695de5f6cba9f4ff1b2852084ce4b32e738ead761",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 760,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 127,
+   "cost_usd": 0.00581,
+   "fingerprint": "947500b8cfb94839243bde3695de5f6cba9f4ff1b2852084ce4b32e738ead761",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 760,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 160,
+   "cost_usd": 0.0012805999999999998,
+   "fingerprint": "947500b8cfb94839243bde3695de5f6cba9f4ff1b2852084ce4b32e738ead761",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 760,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 117,
+   "cost_usd": 0.0010655999999999999,
+   "fingerprint": "947500b8cfb94839243bde3695de5f6cba9f4ff1b2852084ce4b32e738ead761",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 861,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 113,
+   "cost_usd": 0.0011231,
+   "fingerprint": "64c1a020c8be02141c165ec158e299421be6cd2d038b89acc5cd389496bdc4c3",
+   "sql": "SELECT T1.number FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 903 AND T2.q3 LIKE '1:54%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 861,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 129,
+   "cost_usd": 0.0083095,
+   "fingerprint": "64c1a020c8be02141c165ec158e299421be6cd2d038b89acc5cd389496bdc4c3",
+   "sql": "SELECT T1.number FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 903 AND T2.q3 LIKE '1:54%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 861,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 101,
+   "cost_usd": 0.0010630999999999998,
+   "fingerprint": "64c1a020c8be02141c165ec158e299421be6cd2d038b89acc5cd389496bdc4c3",
+   "sql": "SELECT T1.number FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 903 AND T2.q3 LIKE '1:54%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 861,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 129,
+   "cost_usd": 0.0012031,
+   "fingerprint": "64c1a020c8be02141c165ec158e299421be6cd2d038b89acc5cd389496bdc4c3",
+   "sql": "SELECT T1.number FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 903 AND T2.q3 LIKE '1:54%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 1110,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 83,
+   "cost_usd": 0.0012161,
+   "fingerprint": "29d9ebd19241b0d3aae800c9a99acdbd573ee7677cbb2bf6a90f085f2ec9f552",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 1110,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 83,
+   "cost_usd": 0.0012161,
+   "fingerprint": "29d9ebd19241b0d3aae800c9a99acdbd573ee7677cbb2bf6a90f085f2ec9f552",
+   "sql": "SELECT T1.buildUpPlayPassingClass FROM Team_Attributes AS T1 INNER JOIN Team AS T2 ON T1.team_api_id = T2.team_api_id WHERE T2.team_long_name = 'FC Lorient' AND T1.date LIKE '2010-02-22%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 1110,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 89,
+   "cost_usd": 0.0012460999999999998,
+   "fingerprint": "29d9ebd19241b0d3aae800c9a99acdbd573ee7677cbb2bf6a90f085f2ec9f552",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'"
+  },
+  {
+   "arm": "rejected_literal_rules",
+   "qid": 1110,
+   "sample": 3,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 85,
+   "cost_usd": 0.0012261,
+   "fingerprint": "29d9ebd19241b0d3aae800c9a99acdbd573ee7677cbb2bf6a90f085f2ec9f552",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 201,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 200,
+   "cost_usd": 0.00470325,
+   "fingerprint": "2f51b2055dfa5a4116bf0c42f4ab8c99744592bf8b3708b37f1dfd91ac4666e8",
+   "sql": "SELECT CAST(SUM(CASE WHEN T1.element = 'c' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '=') AS T3 ON T1.molecule_id = T3.molecule_id\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 201,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 173,
+   "cost_usd": 0.00125505,
+   "fingerprint": "2f51b2055dfa5a4116bf0c42f4ab8c99744592bf8b3708b37f1dfd91ac4666e8",
+   "sql": "SELECT CAST(SUM(CASE WHEN T1.element = 'c' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN (SELECT DISTINCT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '=') AS T3 ON T1.molecule_id = T3.molecule_id\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 201,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 170,
+   "cost_usd": 0.00124005,
+   "fingerprint": "2f51b2055dfa5a4116bf0c42f4ab8c99744592bf8b3708b37f1dfd91ac4666e8",
+   "sql": "SELECT CAST(SUM(T1.element = 'c') AS REAL) * 100 / COUNT(T1.atom_id) FROM atom AS T1 WHERE EXISTS(SELECT T2.bond_id FROM bond AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.bond_type = '=')\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 253,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 144,
+   "cost_usd": 0.00108305,
+   "fingerprint": "2f51b2055dfa5a4116bf0c42f4ab8c99744592bf8b3708b37f1dfd91ac4666e8",
+   "sql": "SELECT DISTINCT T3.element FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T3.atom_id = T2.atom_id OR T3.atom_id = T2.atom_id2 WHERE T1.bond_type = '#'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 253,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 118,
+   "cost_usd": 0.0009530499999999999,
+   "fingerprint": "2f51b2055dfa5a4116bf0c42f4ab8c99744592bf8b3708b37f1dfd91ac4666e8",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 253,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 162,
+   "cost_usd": 0.00117305,
+   "fingerprint": "2f51b2055dfa5a4116bf0c42f4ab8c99744592bf8b3708b37f1dfd91ac4666e8",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 416,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 211,
+   "cost_usd": 0.01055975,
+   "fingerprint": "2f811e9fae690af4947444bf47fae99f3f68582dcdc507d73fce723a92e4287f",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 416,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 187,
+   "cost_usd": 0.0015753499999999999,
+   "fingerprint": "2f811e9fae690af4947444bf47fae99f3f68582dcdc507d73fce723a92e4287f",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 578,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 73,
+   "cost_usd": 0.00627275,
+   "fingerprint": "d6784146e7736d1de07eb238b6ed38eb3c11b943a64fefcddc5414245fed5d04",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 416,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 180,
+   "cost_usd": 0.0015403499999999998,
+   "fingerprint": "2f811e9fae690af4947444bf47fae99f3f68582dcdc507d73fce723a92e4287f",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 578,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 73,
+   "cost_usd": 0.0008451499999999999,
+   "fingerprint": "d6784146e7736d1de07eb238b6ed38eb3c11b943a64fefcddc5414245fed5d04",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 578,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 72,
+   "cost_usd": 0.0008401499999999999,
+   "fingerprint": "d6784146e7736d1de07eb238b6ed38eb3c11b943a64fefcddc5414245fed5d04",
+   "sql": "SELECT T2.DisplayName, T2.Reputation FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Title = 'Understanding what Dassault iSight is doing?'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 760,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 149,
+   "cost_usd": 0.0012172,
+   "fingerprint": "43c9255115a891e5d1e8d199f8c15e15df9f90706fe32d44042fb98422ce718e",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 760,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 130,
+   "cost_usd": 0.005614999999999999,
+   "fingerprint": "43c9255115a891e5d1e8d199f8c15e15df9f90706fe32d44042fb98422ce718e",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 760,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 131,
+   "cost_usd": 0.0011272,
+   "fingerprint": "43c9255115a891e5d1e8d199f8c15e15df9f90706fe32d44042fb98422ce718e",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 861,
+   "sample": 1,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 92,
+   "cost_usd": 0.0010097,
+   "fingerprint": "453bf1dc5781a32bf817db52517dcc2aea7970eacacfe5d4c988efa07933796a",
+   "sql": "SELECT T1.number FROM qualifying AS T1 WHERE T1.raceId = 903 AND T1.q3 LIKE '1:54%'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 861,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 153,
+   "cost_usd": 0.0013147,
+   "fingerprint": "453bf1dc5781a32bf817db52517dcc2aea7970eacacfe5d4c988efa07933796a",
+   "sql": "SELECT T1.number FROM drivers AS T1 INNER JOIN qualifying AS T2 ON T1.driverId = T2.driverId WHERE T2.raceId = 903 AND T2.q3 LIKE '1:54%'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 1110,
+   "sample": 0,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 90,
+   "cost_usd": 0.0139075,
+   "fingerprint": "cfd0972d41646d0744849346774270b190aad70bf69bf1b2b251147823b1cdeb",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 861,
+   "sample": 2,
+   "status": "ok",
+   "correct": false,
+   "output_tokens": 105,
+   "cost_usd": 0.0010747,
+   "fingerprint": "453bf1dc5781a32bf817db52517dcc2aea7970eacacfe5d4c988efa07933796a",
+   "sql": "SELECT T1.number FROM qualifying AS T1 WHERE T1.raceId = 903 AND T1.q3 LIKE '1:54%'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 1110,
+   "sample": 1,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 86,
+   "cost_usd": 0.0012227,
+   "fingerprint": "cfd0972d41646d0744849346774270b190aad70bf69bf1b2b251147823b1cdeb",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'\n"
+  },
+  {
+   "arm": "trailing_newline",
+   "qid": 1110,
+   "sample": 2,
+   "status": "ok",
+   "correct": true,
+   "output_tokens": 84,
+   "cost_usd": 0.0012127,
+   "fingerprint": "cfd0972d41646d0744849346774270b190aad70bf69bf1b2b251147823b1cdeb",
+   "sql": "SELECT T2.buildUpPlayPassingClass FROM Team AS T1 INNER JOIN Team_Attributes AS T2 ON T1.team_api_id = T2.team_api_id WHERE T1.team_long_name = 'FC Lorient' AND T2.date LIKE '2010-02-22%'\n"
+  }
+ ],
+ "trailing_whitespace": [
+  {
+   "qid": 760,
+   "sample": 0,
+   "status": "ok",
+   "sql": "SELECT CAST(SUM(T2.id = 13) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180\n"
+  },
+  {
+   "qid": 760,
+   "sample": 1,
+   "status": "ok",
+   "sql": "SELECT CAST(SUM(T2.publisher_name = 'Marvel Comics') AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180\n"
+  },
+  {
+   "qid": 760,
+   "sample": 2,
+   "status": "ok",
+   "sql": "SELECT CAST(SUM(CASE WHEN T2.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T2.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.height_cm BETWEEN 150 AND 180\n"
+  },
+  {
+   "qid": 253,
+   "sample": 0,
+   "status": "ok",
+   "sql": "SELECT DISTINCT T3.element FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T3.atom_id = T2.atom_id OR T3.atom_id = T2.atom_id2 WHERE T1.bond_type = '#'\n"
+  },
+  {
+   "qid": 253,
+   "sample": 1,
+   "status": "ok",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'\n"
+  },
+  {
+   "qid": 253,
+   "sample": 2,
+   "status": "ok",
+   "sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id OR T1.atom_id = T2.atom_id2 INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#'\n"
+  }
+ ],
+ "calls": 255
+}

@@ -1,0 +1,29 @@
+name: Grammar coverage
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  grammar-coverage:
+    name: gold SQL coverage on the committed fixture
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      # tests/grammar/fixtures/bird_dev_gold.json holds the dev-split schemas and gold SQL, so this
+      # needs no BIRD download: >= 95% per gold source, lark and llguidance agree, and every
+      # grammar fits the API size budget.
+      - run: make grammar-coverage-fixture

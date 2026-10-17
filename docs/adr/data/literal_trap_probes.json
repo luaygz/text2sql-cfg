@@ -1,0 +1,612 @@
+{
+ "about": "Probes for the unclosable one-character string literal (ADR-005), 2026-10-16. Minimal grammars ('g*') on gpt-6-luna, effort none, max_output_tokens 120 ('Call sql_query with exactly this input: x = <literal>'); 'sol:*' rows are BIRD Mini-Dev questions on gpt-6.1-sol, effort low, max_output_tokens 600, full-schema grammar. sol:current before 13:18 UTC used the old string regex (2/2 runaway on q218); sol:current and sol:nodesc after the fix use the new regex (10/10 closed). All through text2sql.llm.LLMClient.sql_call, T2SQL_PHASE=grammar.",
+ "probes": [
+  {
+   "grammar": "g1_ours",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "g1_ours",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "g1_ours",
+   "model": "gpt-6-luna",
+   "literal": "f",
+   "ok": true,
+   "output": "x = 'f'"
+  },
+  {
+   "grammar": "g1_ours",
+   "model": "gpt-6-luna",
+   "literal": "a+",
+   "ok": true,
+   "output": "x = 'a+'"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "f",
+   "ok": true,
+   "output": "x = 'f'"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "a+",
+   "ok": true,
+   "output": "x = 'a+'"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+’ \n્તિ\n 金尊\nI’m unable to make that exact call: the required input format allows only straight single quotes, and the supplied string uses a curly quote. The exact valid input would be `x = ‘+’` only if converted to straight quotes. I did not execute it.2'"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "grammar": "g3_plain",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "grammar": "g5_spstr",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "g5_spstr",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "g5_spstr",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "g5_spstr",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "g6_optsp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "g6_optsp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+’ \nWinvalid\n? Tool grammar expects ASCII single quote string, passed accidental curly? Need exactly x = '"
+  },
+  {
+   "grammar": "g6_optsp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '* '"
+  },
+  {
+   "grammar": "g6_optsp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "g7_tail",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ AND y = 1\n) <=\",live\n```\nBut user says exact input \"x = ' AND y = 1"
+  },
+  {
+   "grammar": "g7_tail",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": true,
+   "output": "x = '+' AND y = 1"
+  },
+  {
+   "grammar": "g7_tail",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*' AND y = 1"
+  },
+  {
+   "grammar": "g7_tail",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*' AND y = 1"
+  },
+  {
+   "grammar": "g8_opttail",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "g8_opttail",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+’ \n#+#+#+#+assistant to=functions.sql_query\nx = ' AND y = 1"
+  },
+  {
+   "grammar": "g9_end_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+THOOK'"
+  },
+  {
+   "grammar": "g9_end_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+  '"
+  },
+  {
+   "grammar": "g10_single",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": true,
+   "output": "x = '+'"
+  },
+  {
+   "grammar": "g10_single",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": true,
+   "output": "x = '+'"
+  },
+  {
+   "grammar": "gA_forced_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "gA_forced_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": true,
+   "output": "x = '+'"
+  },
+  {
+   "grammar": "gA_forced_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+(1+1)'"
+  },
+  {
+   "grammar": "gA_forced_sp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gA_forced_sp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "grammar": "gA_forced_sp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gC_opt_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '++'"
+  },
+  {
+   "grammar": "gC_opt_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "gC_opt_sp",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "gC_opt_sp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gC_opt_sp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "grammar": "gC_opt_sp",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gD_star",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": true,
+   "output": "x = '+'"
+  },
+  {
+   "grammar": "gD_star",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+’ \n \n\n \n)  \n ( \n  ( \n  '"
+  },
+  {
+   "grammar": "gD_star",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "FAILED[incomplete] 'x = \\'+’ \\n{ \"error\":\"Invalid input\" } \\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\n \\n\\n\\n\\n\\n\\n\\"
+  },
+  {
+   "grammar": "gD_star",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gD_star",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gD_star",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gD_8",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+’\n)  񟿿\n'"
+  },
+  {
+   "grammar": "gD_8",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ Аԥсны\n'"
+  },
+  {
+   "grammar": "gD_8",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+\n'"
+  },
+  {
+   "grammar": "gD_8",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "grammar": "gD_8",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’'"
+  },
+  {
+   "grammar": "gD_8",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "x = '*'"
+  },
+  {
+   "grammar": "gE_start",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "'+ '"
+  },
+  {
+   "grammar": "gE_start",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "'+\n'"
+  },
+  {
+   "grammar": "gE_start",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "'+ '"
+  },
+  {
+   "grammar": "gE_start",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": true,
+   "output": "'*'"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "FAILED[incomplete] \"x = '+\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\nnow\\n\""
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+\n)        \n</assistant to=functions.sql_query>\nly\n#+#+#+#+assistant to=functions.sql_query\nx = '"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "+",
+   "ok": false,
+   "output": "x = '+ '"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’?\n ;;= \n</assistant to=functions.sql_query>\n?? \n中央値との差\nWe need exact input x = '"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’ \nTHOOK\n \n\n\n \n \n\n \n \n\n \n \n \n\n \n \n \n \n\n \n \n\n \n \n \n\n \n \n \n \n\n \n \n \n\n \n \n\n \n \n \n\n \n \n \n \n \n \n\n \n \n \n \n \n \n \n \n \n \n \n \n\n \n \n\n \n \n\n \n \n\n \n \n\n \n \n \n \n \n \n \n \n \n \n \n \n\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n\n \n \n \n \n \n \n\n \n \n\n \n \n\n \n \n\n \n \n \n \n \n \n\n \n \n \n\n \n \n\t'"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "*",
+   "ok": false,
+   "output": "x = '*’ \n 久久精品\n адырра\n 亚游\n ] \n '"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "f",
+   "ok": true,
+   "output": "x = 'f'"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "f",
+   "ok": true,
+   "output": "x = 'f'"
+  },
+  {
+   "grammar": "gS_sepclose",
+   "model": "gpt-6-luna",
+   "literal": "f",
+   "ok": true,
+   "output": "x = 'f'"
+  },
+  {
+   "grammar": "paren",
+   "target": "x = ('+')",
+   "ok": false,
+   "output": "x = ('+)')"
+  },
+  {
+   "grammar": "paren",
+   "target": "x = ('+')",
+   "ok": true,
+   "output": "x = ('+')"
+  },
+  {
+   "grammar": "paren",
+   "target": "x = ('+')",
+   "ok": false,
+   "output": "x = ('+)')"
+  },
+  {
+   "grammar": "paren",
+   "target": "x IN ('+')",
+   "ok": true,
+   "output": "x IN ('+')"
+  },
+  {
+   "grammar": "paren",
+   "target": "x IN ('+')",
+   "ok": true,
+   "output": "x IN ('+')"
+  },
+  {
+   "grammar": "paren",
+   "target": "x IN ('+')",
+   "ok": true,
+   "output": "x IN ('+')"
+  },
+  {
+   "grammar": "paren",
+   "target": "x IN ('*')",
+   "ok": true,
+   "output": "x IN ('*')"
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 218,
+   "status": "incomplete",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT T2.atom_id FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / NULLIF(COUNT(DISTINCT T1.molecule_id), 0) AS c1 FROM molecule AS T1 WHERE T1.label = '+ pretty:false ' < 1 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < 0 > ' ' < "
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 218,
+   "status": "incomplete",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT T2.atom_id FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / COUNT(DISTINCT T1.molecule_id) AS c1 FROM molecule AS T1 WHERE T1.label = '+ large? ' OR T1.label = '+ normal? ' OR T1.label = '+ small? ' OR T1.label = '+ yes? ' OR T1.label = '+ no? ' OR T1.label = '+? ' OR T1.label = '+ ' OR T1.label = '+? ' "
+  },
+  {
+   "grammar": "sol:patched",
+   "qid": 218,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT T2.atom_id FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / NULLIF(COUNT(DISTINCT T1.molecule_id), 0) AS c1 FROM molecule AS T1 WHERE T1.label IN ('+ boute') OR T1.label IN ('+ nominal') OR T1.label IN ('+ clean') OR T1.label IN ('+ soleil') OR T1.label IN ('+ flute') OR T1.label IN ('+ autumn') OR T1.la"
+  },
+  {
+   "grammar": "sol:patched",
+   "qid": 218,
+   "status": "incomplete",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT T2.atom_id FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / COUNT(DISTINCT T1.molecule_id) AS c1 FROM molecule AS T1 WHERE T1.label IN ('+ छ') OR T1.label IN ('+ड़') OR T1.label IN ('+ र') OR T1.label IN ('+ऋ') OR T1.label IN ('+ॠ') OR T1.label IN ('+ऌ') OR T1.label IN ('+ॡ') OR T1.label IN ('+ऎ') OR T1.l"
+  },
+  {
+   "grammar": "sol:patched",
+   "qid": 197,
+   "status": "ok",
+   "output": "SELECT AVG(T1.element = 'o') AS c1 FROM atom AS T1 WHERE EXISTS(SELECT 1 FROM bond AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.bond_type IN ('-'))"
+  },
+  {
+   "grammar": "sol:patched",
+   "qid": 197,
+   "status": "ok",
+   "output": "SELECT AVG(T1.element = 'o') AS c1 FROM atom AS T1 WHERE T1.molecule_id IN (SELECT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type IN ('-'))"
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 218,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT T2.atom_id FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / COUNT(DISTINCT T1.molecule_id) AS c1 FROM molecule AS T1 WHERE T1.label = '+'"
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 218,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT 1 FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / NULLIF(COUNT(DISTINCT T1.molecule_id), 0) AS c1 FROM molecule AS T1 WHERE T1.label = '+'"
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 197,
+   "status": "ok",
+   "output": "SELECT AVG(T1.element = 'o') FROM atom AS T1 WHERE T1.molecule_id IN (SELECT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '-')"
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 197,
+   "status": "ok",
+   "output": "SELECT AVG(T1.element = 'o') AS c1 FROM atom AS T1 WHERE T1.molecule_id IN (SELECT T2.molecule_id FROM bond AS T2 WHERE T2.bond_type = '-')"
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 416,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) / COUNT(*) AS c1 FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "grammar": "sol:current",
+   "qid": 416,
+   "status": "ok",
+   "output": "SELECT 100.0 * COUNT(CASE WHEN EXISTS(SELECT 1 FROM foreign_data AS T2 WHERE T2.uuid = T1.uuid AND T2.language = 'French') THEN 1 END) / NULLIF(COUNT(*), 0) AS c1 FROM cards AS T1 WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "grammar": "sol:nodesc",
+   "qid": 218,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT 1 FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / COUNT(DISTINCT T1.molecule_id) AS c1 FROM molecule AS T1 WHERE T1.label = '+'"
+  },
+  {
+   "grammar": "sol:nodesc",
+   "qid": 218,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN NOT EXISTS(SELECT T2.atom_id FROM atom AS T2 WHERE T2.molecule_id = T1.molecule_id AND T2.element = 'f') THEN 1 ELSE 0 END) / COUNT(DISTINCT T1.molecule_id) AS c1 FROM molecule AS T1 WHERE T1.label = '+'"
+  },
+  {
+   "grammar": "sol:nodesc",
+   "qid": 416,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN EXISTS(SELECT 1 FROM foreign_data AS T2 WHERE T2.uuid = T1.uuid AND T2.language = 'French') THEN 1 ELSE 0 END) / COUNT(*) AS c1 FROM cards AS T1 WHERE T1.power IS NULL OR T1.power = '*'"
+  },
+  {
+   "grammar": "sol:nodesc",
+   "qid": 416,
+   "status": "ok",
+   "output": "SELECT 100.0 * SUM(CASE WHEN T2.language = 'French' THEN 1 ELSE 0 END) / COUNT(*) AS c1 FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T1.power IS NULL OR T1.power = '*'"
+  }
+ ]
+}

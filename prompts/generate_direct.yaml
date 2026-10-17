@@ -1,0 +1,12 @@
+name: generate_direct
+version: "1.0"
+description: >-
+  Method text (developer message 2) of the direct strategies (direct_full, direct_linked_fewshot,
+  small_linked): no prescribed reasoning method, the Maamari et al. / MCS-SQL style baseline.
+changelog:
+  - version: "1.0"
+    date: 2026-10-16
+    note: First version.
+sections:
+  method: |
+    Read the question, the evidence and the schema. Decide which tables, columns, joins, conditions and aggregations the answer needs, and write the query directly.

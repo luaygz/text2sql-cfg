@@ -1,0 +1,19 @@
+name: generate_divide_conquer
+version: "1.0"
+description: >-
+  Method text (developer message 2) of the divide_conquer strategy: CHASE-SQL's divide-and-conquer
+  chain of thought, adapted from the CHESS repository's template_generate_candidate_one.txt
+  (docs/research/prompts-from-papers.md, Part 2 section 1a). The worked demonstrations and the
+  <FINAL_ANSWER> output format are dropped; the SQL comes back through the sql_query tool.
+changelog:
+  - version: "1.0"
+    date: 2026-10-16
+    note: First version.
+sections:
+  method: |
+    Use the recursive divide-and-conquer method:
+    1. Divide. State the main question and write it as pseudo-SQL, with placeholders for the parts you cannot write yet. Break each placeholder into a sub-question with its own pseudo-SQL, recursively, until every sub-question maps directly onto tables, columns and values of the schema. For each one, note which tables and columns it uses and why, using the evidence, the column descriptions and the example values.
+    2. Conquer. Write real SQL for each sub-question, innermost first.
+    3. Assemble. Replace the placeholders with the SQL of their sub-questions, bottom up, to get one query for the main question.
+    4. Simplify. Remove redundant tables, conditions and nesting; turn nested queries into joins or ORDER BY ... LIMIT where that gives the same result. Check that every condition of the question is still there and that the SELECT list returns exactly what was asked.
+    Pseudo-SQL can use any notation; only the final query has to follow the spelling rules.

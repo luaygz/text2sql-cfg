@@ -1,0 +1,350 @@
+{
+  "schema_version": 1,
+  "run": {
+    "run_id": "20261016T200319-e601fd",
+    "git_sha": "41a88a836fa385225e7737edd13ac9197637fa02",
+    "timestamp": "2026-10-16T20:03:19.228413Z",
+    "config_name": "best",
+    "config": {
+      "pipeline": {
+        "name": "best",
+        "use_evidence": false,
+        "question_analysis": false,
+        "value_retrieval": false,
+        "schema_linking": false,
+        "fewshot_k": 0,
+        "strategies": [
+          "direct_full",
+          "divide_conquer",
+          "query_plan"
+        ],
+        "n_candidates": 1,
+        "repair": true,
+        "max_repairs": 2,
+        "literal_check": true,
+        "selector": "vote",
+        "judge_threshold": 1.0,
+        "cheap_path": false,
+        "grammar": true,
+        "generator_effort": null,
+        "explain": false,
+        "bird_conventions": true
+      },
+      "generator_model": "gpt-6.1-sol",
+      "small_model": "gpt-6-luna",
+      "embedding_model": "text-embedding-3-small",
+      "small_effort": "low",
+      "service_tier": "flex",
+      "limit": null,
+      "sample_seed": 20261016
+    },
+    "overrides": {},
+    "n_candidates": 1,
+    "effort": "medium",
+    "dataset": "saas",
+    "split": "dev",
+    "with_evidence": false,
+    "questions_planned": 209,
+    "partial": false,
+    "partial_reason": null,
+    "spend": {
+      "billed_usd": 0.26314389999999993,
+      "priced_usd": 0.3740234,
+      "budget_usd": 15.0,
+      "calls": 316,
+      "cache_hits": 90,
+      "input_tokens": 1384815,
+      "cached_tokens": 1319626,
+      "output_tokens": 32477,
+      "reasoning_tokens": 10528
+    }
+  },
+  "summary": {
+    "overall": {
+      "n": 209,
+      "ex": {
+        "k": 182,
+        "n": 209,
+        "value": 0.8708133971291866,
+        "ci_low": 0.8229665071770335,
+        "ci_high": 0.9138755980861244,
+        "wilson_low": 0.8185664773225775,
+        "wilson_high": 0.9096751014507479
+      },
+      "pass_at_n": {
+        "k": 182,
+        "n": 209,
+        "value": 0.8708133971291866,
+        "ci_low": 0.8229665071770335,
+        "ci_high": 0.9138755980861244,
+        "wilson_low": 0.8185664773225775,
+        "wilson_high": 0.9096751014507479
+      },
+      "selection_accuracy": 1.0,
+      "cost_per_question_usd": 0.0012514033492822966,
+      "latency_p50_s": 3.656234650989063,
+      "latency_p95_s": 7.7665413872106
+    },
+    "by_difficulty": {
+      "easy": {
+        "n": 89,
+        "ex": {
+          "k": 86,
+          "n": 89,
+          "value": 0.9662921348314607,
+          "ci_low": 0.9213483146067416,
+          "ci_high": 1.0,
+          "wilson_low": 0.9055263755943858,
+          "wilson_high": 0.9884707788482102
+        },
+        "pass_at_n": {
+          "k": 86,
+          "n": 89,
+          "value": 0.9662921348314607,
+          "ci_low": 0.9213483146067416,
+          "ci_high": 1.0,
+          "wilson_low": 0.9055263755943858,
+          "wilson_high": 0.9884707788482102
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0010079696629213483,
+        "latency_p50_s": 3.1271456940448843,
+        "latency_p95_s": 6.363523065589834
+      },
+      "medium": {
+        "n": 62,
+        "ex": {
+          "k": 52,
+          "n": 62,
+          "value": 0.8387096774193549,
+          "ci_low": 0.7419354838709677,
+          "ci_high": 0.9193548387096774,
+          "wilson_low": 0.7279366398602256,
+          "wilson_high": 0.9099593112969091
+        },
+        "pass_at_n": {
+          "k": 52,
+          "n": 62,
+          "value": 0.8387096774193549,
+          "ci_low": 0.7419354838709677,
+          "ci_high": 0.9193548387096774,
+          "wilson_low": 0.7279366398602256,
+          "wilson_high": 0.9099593112969091
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0012606516129032258,
+        "latency_p50_s": 3.7629335724632256,
+        "latency_p95_s": 7.8445958965603495
+      },
+      "hard": {
+        "n": 58,
+        "ex": {
+          "k": 44,
+          "n": 58,
+          "value": 0.7586206896551724,
+          "ci_low": 0.6379310344827587,
+          "ci_high": 0.8620689655172413,
+          "wilson_low": 0.6347001974698658,
+          "wilson_high": 0.8504112564333051
+        },
+        "pass_at_n": {
+          "k": 44,
+          "n": 58,
+          "value": 0.7586206896551724,
+          "ci_low": 0.6379310344827587,
+          "ci_high": 0.8620689655172413,
+          "wilson_low": 0.6347001974698658,
+          "wilson_high": 0.8504112564333051
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0016150620689655171,
+        "latency_p50_s": 4.808470015996136,
+        "latency_p95_s": 8.435058099709568
+      }
+    },
+    "by_db": {
+      "saas_crm": {
+        "n": 209,
+        "ex": {
+          "k": 182,
+          "n": 209,
+          "value": 0.8708133971291866,
+          "ci_low": 0.8229665071770335,
+          "ci_high": 0.9138755980861244,
+          "wilson_low": 0.8185664773225775,
+          "wilson_high": 0.9096751014507479
+        },
+        "pass_at_n": {
+          "k": 182,
+          "n": 209,
+          "value": 0.8708133971291866,
+          "ci_low": 0.8229665071770335,
+          "ci_high": 0.9138755980861244,
+          "wilson_low": 0.8185664773225775,
+          "wilson_high": 0.9096751014507479
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0012514033492822966,
+        "latency_p50_s": 3.656234650989063,
+        "latency_p95_s": 7.7665413872106
+      }
+    },
+    "by_bucket": {
+      "adversarial": {
+        "n": 35,
+        "ex": {
+          "k": 35,
+          "n": 35,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.9010990076755961,
+          "wilson_high": 1.0
+        },
+        "pass_at_n": {
+          "k": 35,
+          "n": 35,
+          "value": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "wilson_low": 0.9010990076755961,
+          "wilson_high": 1.0
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.000996442857142857,
+        "latency_p50_s": 2.8379562189802527,
+        "latency_p95_s": 5.899976980622157
+      },
+      "answerable": {
+        "n": 105,
+        "ex": {
+          "k": 89,
+          "n": 105,
+          "value": 0.8476190476190476,
+          "ci_low": 0.7714285714285715,
+          "ci_high": 0.9142857142857143,
+          "wilson_low": 0.7667269516059707,
+          "wilson_high": 0.9039733568147432
+        },
+        "pass_at_n": {
+          "k": 89,
+          "n": 105,
+          "value": 0.8476190476190476,
+          "ci_low": 0.7714285714285715,
+          "ci_high": 0.9142857142857143,
+          "wilson_low": 0.7667269516059707,
+          "wilson_high": 0.9039733568147432
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0013812238095238095,
+        "latency_p50_s": 3.8262294930173084,
+        "latency_p95_s": 7.820909372810274
+      },
+      "tenant": {
+        "n": 42,
+        "ex": {
+          "k": 33,
+          "n": 42,
+          "value": 0.7857142857142857,
+          "ci_low": 0.6666666666666666,
+          "ci_high": 0.9047619047619048,
+          "wilson_low": 0.6406015468367708,
+          "wilson_high": 0.8829420012399695
+        },
+        "pass_at_n": {
+          "k": 33,
+          "n": 42,
+          "value": 0.7857142857142857,
+          "ci_low": 0.6666666666666666,
+          "ci_high": 0.9047619047619048,
+          "wilson_low": 0.6406015468367708,
+          "wilson_high": 0.8829420012399695
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0013225809523809524,
+        "latency_p50_s": 3.862840301502729,
+        "latency_p95_s": 8.397779820684807
+      },
+      "unanswerable": {
+        "n": 27,
+        "ex": {
+          "k": 25,
+          "n": 27,
+          "value": 0.9259259259259259,
+          "ci_low": 0.8148148148148148,
+          "ci_high": 1.0,
+          "wilson_low": 0.7663040731697686,
+          "wilson_high": 0.9794453459390113
+        },
+        "pass_at_n": {
+          "k": 25,
+          "n": 27,
+          "value": 0.9259259259259259,
+          "ci_low": 0.8148148148148148,
+          "ci_high": 1.0,
+          "wilson_low": 0.7663040731697686,
+          "wilson_high": 0.9794453459390113
+        },
+        "selection_accuracy": 1.0,
+        "cost_per_question_usd": 0.0009663296296296296,
+        "latency_p50_s": 3.5089992550201714,
+        "latency_p95_s": 7.229282584413886
+      }
+    },
+    "linking": null,
+    "grammar_coverage": null,
+    "grammar_rejections": {
+      "calls": 292,
+      "rejections": 0,
+      "rate": 0.0
+    },
+    "safety": {
+      "events_by_layer": {
+        "grammar": 0,
+        "validator": 0,
+        "executor": 0,
+        "scoping": 0
+      },
+      "questions_stopped_by_layer": {
+        "grammar": 0,
+        "validator": 0,
+        "executor": 0,
+        "scoping": 0
+      },
+      "adversarial_questions": 35,
+      "database_violations": 0
+    },
+    "abstention": {
+      "abstained": 26,
+      "should_abstain": 27,
+      "precision": {
+        "k": 25,
+        "n": 26,
+        "value": 0.9615384615384616,
+        "ci_low": 0.8846153846153846,
+        "ci_high": 1.0,
+        "wilson_low": 0.8110722109696525,
+        "wilson_high": 0.9931780150064565
+      },
+      "recall": {
+        "k": 25,
+        "n": 27,
+        "value": 0.9259259259259259,
+        "ci_low": 0.8148148148148148,
+        "ci_high": 1.0,
+        "wilson_low": 0.7663040731697686,
+        "wilson_high": 0.9794453459390113
+      }
+    },
+    "rves": null,
+    "cost_total_usd": 0.2615433,
+    "failures": 27,
+    "failure_labels": {
+      "abstention_error": 3,
+      "extra_or_missing_output_columns": 9,
+      "wrong_filter_value": 9,
+      "wrong_join_path": 6
+    },
+    "gold_suspect_failures": 0
+  }
+}
